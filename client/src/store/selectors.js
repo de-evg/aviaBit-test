@@ -99,16 +99,19 @@ const getAllData = (actualChartData, plannedChartData) => {
 
     const allData = [...years].reduce((result, year) => {
       const statisctic = {};
-      if (actualChartData.filter((data) => data.name === year)) {
-        statisctic.actualTimeFlight = actualChartData.filter((data) => data.name === year).timeFlight;
-        statisctic.actualTimeWork = actualChartData.filter((data) => data.name === year).timeWork;
+      const actualFlight = actualChartData.filter((data) => data.name === year);
+      const plannedFlight = plannedChartData.filter((data) => data.name === year);
+      if (actualFlight.length) {
+        statisctic.actualTimeFlight = actualFlight[0].timeFlight;
+        statisctic.actualTimeWork = actualFlight[0].timeWork;
       }
-      if (plannedChartData.filter((data) => data.name === year)) {
-        statisctic.plannedTimeFlight = plannedChartData.filter((data) => data.name === year).timeFlight;
-        statisctic.plannedTimeWork = plannedChartData.filter((data) => data.name === year).timeWork;
+      if (plannedFlight.length) {
+        statisctic.plannedTimeFlight = plannedFlight[0].timeFlight;
+        statisctic.plannedTimeWork = plannedFlight[0].timeWork;
       }
       statisctic.name = year;
-      return result.push(statisctic);
+      result.push(statisctic);
+      return result;
     }, []);
     return allData;
   }

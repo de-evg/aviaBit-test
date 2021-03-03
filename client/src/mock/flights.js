@@ -11,7 +11,7 @@ const FlightNumber = {
 };
 
 const PlaneType = [
-  'B-757-200', 
+  'B-757-200',
   'B-757-300',
   'B-767-200',
   'B-767-300',
@@ -36,7 +36,7 @@ const Time = {
 };
 
 const generateRandomDate = (start, end) => {
-  return new Date(start + Math.random() * (end - start));
+  return new Date(start + Math.random() * (end - start), generateRandomNumber(0, 11) , generateRandomNumber(1, 30));
 };
 
 const generateRandomNumber = (start, end) => {
@@ -72,10 +72,11 @@ const generateFlight = () => {
     'timeNight': time.night,
     'timeBiologicalNight': time.biologicalNight,
     'timeWork': time.work,
+    'type': Math.random() > 0.5,
     'takeoff': {
-      'name': 'Томск(Богашево)', 
-      'lat': 56.38333333, 
-      'long': 85.2 
+      'name': 'Томск(Богашево)',
+      'lat': 56.38333333,
+      'long': 85.2
     },
     'landing': {
       'name': 'Нячанг(Камрань Интл)',
@@ -88,7 +89,7 @@ const generateFlight = () => {
 export const generateFlights = () => {
   const flights = [];
   for (let index = 0; index < FLIGHT_COUNT; index++) {
-    flights.push(generateFlight());  
+    flights.push(generateFlight());
   }
   return flights;
 ;}

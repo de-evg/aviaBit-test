@@ -49,10 +49,10 @@ const Chart = ({chartData}) => {
           isToggled && <Bar dataKey="plannedTimeFlight" name="Плановое время налета" stackId="a" fill="#82ca00" />
         }
         {
-          !isToggled &&<Bar dataKey="actualTimeWork" name="Фактическое время работы" stackId="a" fill="#82ca00" />
+          !isToggled &&<Bar dataKey="actualTimeWork" name="Фактическое время работы" stackId="a" fill="#88ddd8" />
         }
         {
-          !isToggled && <Bar dataKey="plannedTimeWork" name="Плановое время работы" stackId="a" fill="#88ddd8" />
+          !isToggled && <Bar dataKey="plannedTimeWork" name="Плановое время работы" stackId="a" fill="#82ca00" />
         }
 
 

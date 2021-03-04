@@ -87,6 +87,8 @@ const getPlannedFlights = (flights) => {
   return convertedFlights;
 };
 
+const convertSecToHours = (sec) => Math.floor( sec / 3600);
+
 const getAllData = (actualChartData, plannedChartData) => {
   if (Object.keys(actualChartData).length && Object.keys(plannedChartData).length) {
     const years = new Set();
@@ -102,12 +104,12 @@ const getAllData = (actualChartData, plannedChartData) => {
       const actualFlight = actualChartData.filter((data) => data.name === year);
       const plannedFlight = plannedChartData.filter((data) => data.name === year);
       if (actualFlight.length) {
-        statisctic.actualTimeFlight = actualFlight[0].timeFlight;
-        statisctic.actualTimeWork = actualFlight[0].timeWork;
+        statisctic.actualTimeFlight = convertSecToHours(actualFlight[0].timeFlight);
+        statisctic.actualTimeWork = convertSecToHours(actualFlight[0].timeWork);
       }
       if (plannedFlight.length) {
-        statisctic.plannedTimeFlight = plannedFlight[0].timeFlight;
-        statisctic.plannedTimeWork = plannedFlight[0].timeWork;
+        statisctic.plannedTimeFlight = convertSecToHours(plannedFlight[0].timeFlight);
+        statisctic.plannedTimeWork = convertSecToHours(plannedFlight[0].timeWork);
       }
       statisctic.name = year;
       result.push(statisctic);
@@ -124,6 +126,7 @@ export const getChartData = createSelector(
     const plannedChartData = getPlannedFlights(flights);
 
     const allData = getAllData(actualChartData, plannedChartData) || [];
+    console.log(allData);
     return allData;
   }
 );

@@ -4,11 +4,30 @@ import {
   Grid,
 } from "@material-ui/core";
 import Chart from "../chart/chart";
+import { makeStyles } from "@material-ui/core/styles";
+
+const useStyles = makeStyles({
+  label: {
+    color: "#676565",
+    fontWeight: 400,
+    fontSize: "12px"
+  },
+  userMail: {
+    color: "#676565",
+    fontWeight: 400,
+  },
+  expandIcon: {
+    position: "relative",
+    color: "#4e85f5",
+  }
+});
 
 const FlightStatistic = () => {
+  const classes = useStyles();
+
   return (
     <Grid container>
-      <Typography style={{ boxSizing: "border-box", maxWidth: "290px" }}>
+      <Typography className={classes.label}>
         Общая статистика налета и рабочего времени
       </Typography>
       <Chart style={{ boxSizing: "border-box", maxWidth: "290px" }} />

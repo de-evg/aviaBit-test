@@ -7,31 +7,45 @@ import {
   AccordionDetails,
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import { makeStyles } from "@material-ui/core/styles";
+
+const useStyles = makeStyles({
+  root: {
+    boxSizing: "border-box",
+    boxShadow: "none",
+    maxWidth: "280px",
+  },
+  accordionItem: {
+    padding: "0",
+  },
+  label: {
+    fontWeight: 700
+  },
+  userMail: {
+    color: "#676565",
+    fontWeight: 400,
+  },
+  expandIcon: {
+    position: "relative",
+    color: "#4e85f5",
+  }
+});
 
 const AccordionContainer = ({ children, renderDetails }) => {
+  const classes = useStyles();
+
   return (
     <Grid item>
-      <Accordion
-        style={{
-          boxSizing: "border-box",
-          boxShadow: "none",
-          maxWidth: "280px",
-        }}
-      >
+      <Accordion className={classes.root}>
         <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
+          expandIcon={<ExpandMoreIcon className={classes.expandIcon}  />}
           aria-controls="panel1a-content"
           id="panel1a-header"
+          className={classes.accordionItem}
         >
-          <Typography style={{ boxSizing: "border-box", maxWidth: "290px" }}>
-            {children}
-          </Typography>
+          <Typography className={classes.label}>{children}</Typography>
         </AccordionSummary>
-        <AccordionDetails
-          style={{ boxSizing: "border-box", maxWidth: "290px" }}
-        >
-          {renderDetails()}
-        </AccordionDetails>
+        <AccordionDetails className={classes.accordionItem}>{renderDetails()}</AccordionDetails>
       </Accordion>
     </Grid>
   );

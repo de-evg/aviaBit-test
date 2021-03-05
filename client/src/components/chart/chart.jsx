@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import {
@@ -7,28 +7,51 @@ import {
   XAxis,
   YAxis,
   CartesianGrid,
-  Tooltip,
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { NameSpace } from "../../store/reducers/root";
+
 import { getChartData } from "../../store/selectors";
-import NewButton from "../new-button/new-button";
+import Toggle from "../toggle/toggle";
 import { Grid } from "@material-ui/core";
+import { ActionCreator } from "../../store/action";
+import { StatisticType } from "../../const";
+import SimpleSelect from "../select/select";
 
-const Chart = ({ chartData }) => {
-  const [isToggled, setToggle] = useState(false);
+const times = ["Время работы", "Время налёта"];
+const intervals = ["Годы", "Месяцы"];
 
-  const handleBtnClick = useCallback(() => {
-    setToggle(!isToggled);
-  }, [isToggled]);
+const Chart = ({ chartData, toggleStatisticType }) => {
+  const [isTimeToggled, setTimeToggle] = useState(false);
+  const [isStatisticTypeToggled, setStatisticToggle] = useState(false);
+
+  const handleChangeToggle = useCallback(() => {
+    setTimeToggle(!isTimeToggled);
+  }, [isTimeToggled]);
+
+  const handleStatisticToggle = useCallback(() => {
+    setStatisticToggle(!isStatisticTypeToggled);
+  }, [isStatisticTypeToggled]);
+
+  useEffect(() => {
+    toggleStatisticType(
+      isStatisticTypeToggled ? StatisticType.MONTHS : StatisticType.YEARS
+    );
+  }, [isStatisticTypeToggled, toggleStatisticType]);
+
+  const handleBarClick = useCallback((evt) => {
+    console.log("sss");
+  }, []);
+
   return (
     <Grid container>
-      <NewButton clickHandler={handleBtnClick}>Переключить</NewButton>
-      <div style={{width: "100%", height: "250px"}}>
+      <Toggle changeHandler={handleStatisticToggle} labels={intervals} />
+      <SimpleSelect />
+      <Toggle changeHandler={handleChangeToggle} labels={times} />
+      <div style={{ width: "100%", height: "250px" }}>
         <ResponsiveContainer>
           <BarChart
-            width={500}
+            width="100%"
             height={250}
             data={chartData}
             margin={{
@@ -41,42 +64,45 @@ const Chart = ({ chartData }) => {
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="name" />
             <YAxis />
-            <Tooltip />
             <Legend />
-            {isToggled && (
+            {isTimeToggled && (
               <Bar
+                onClick={handleBarClick}
                 barSize={10}
                 dataKey="actualTimeFlight"
                 name="Фактическое время налета"
                 stackId="a"
-                fill="#88ddd8"
+                fill="rgb(78, 133, 245)"
               />
             )}
-            {isToggled && (
+            {isTimeToggled && (
               <Bar
+                onClick={handleBarClick}
                 barSize={10}
                 dataKey="plannedTimeFlight"
                 name="Плановое время налета"
                 stackId="a"
-                fill="#82ca00"
+                fill="rgba(78, 133, 245, 0.6)"
               />
             )}
-            {!isToggled && (
+            {!isTimeToggled && (
               <Bar
+                onClick={handleBarClick}
                 barSize={10}
                 dataKey="actualTimeWork"
                 name="Фактическое время работы"
                 stackId="a"
-                fill="#88ddd8"
+                fill="rgb(78, 133, 245)"
               />
             )}
-            {!isToggled && (
+            {!isTimeToggled && (
               <Bar
+                onClick={handleBarClick}
                 barSize={10}
                 dataKey="plannedTimeWork"
                 name="Плановое время работы"
                 stackId="a"
-                fill="#82ca00"
+                fill="rgba(78, 133, 245, 0.6)"
               />
             )}
           </BarChart>
@@ -92,4 +118,10 @@ const mapStateToProps = (state) => ({
   chartData: getChartData(state),
 });
 
-export default connect(mapStateToProps)(Chart);
+const mapDispatchToProps = (dispatch) => ({
+  toggleStatisticType(type) {
+    dispatch(ActionCreator.changeStatisticType(type));
+  },
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Chart);

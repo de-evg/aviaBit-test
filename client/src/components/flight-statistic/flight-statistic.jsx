@@ -30,7 +30,7 @@ const FlightStatistic = () => {
       <Typography className={classes.label}>
         Общая статистика налета и рабочего времени
       </Typography>
-      <Chart style={{ boxSizing: "border-box", maxWidth: "290px" }} />
+      <Chart />
     </Grid>
   );
 };

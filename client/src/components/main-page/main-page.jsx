@@ -46,7 +46,7 @@ const MainPage = ({ history }) => {
         <Grid container>
           <User />
           <NextFlight />
-          <AccordionContainer renderDetails={() => <FlightStatistic />}>Статистика налёта</AccordionContainer>
+          <AccordionContainer style={{width: "350px"}} renderDetails={() => <FlightStatistic />}>Статистика налёта</AccordionContainer>
         </Grid>
       </Box>
     </>

@@ -1,6 +1,6 @@
-import React, { useCallback, useState, useEffect } from "react";
+import React, {useCallback, useState, useEffect} from "react";
 import PropTypes from "prop-types";
-import { connect } from "react-redux";
+import {connect} from "react-redux";
 import {
   BarChart,
   Bar,
@@ -11,19 +11,20 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-import { getChartData } from "../../store/selectors";
+import {getChartData} from "../../store/selectors";
 import Toggle from "../toggle/toggle";
-import { Grid } from "@material-ui/core";
-import { ActionCreator } from "../../store/action";
-import { StatisticType } from "../../const";
+import {Grid} from "@material-ui/core";
+import {ActionCreator} from "../../store/action";
+import {StatisticType} from "../../const";
 import Select from "../select/select";
 
 const times = ["Время работы", "Время налёта"];
 const intervals = ["Годы", "Месяцы"];
 
-const Chart = ({ chartData, toggleStatisticType }) => {
+const Chart = ({chartData, toggleStatisticType}) => {
   const [isTimeToggled, setTimeToggle] = useState(false);
   const [isStatisticTypeToggled, setStatisticToggle] = useState(false);
+  const bootomGap = isStatisticTypeToggled ? {marginBottom: "0"} : {marginBottom: "30px"};
 
   const handleChangeToggle = useCallback(() => {
     setTimeToggle(!isTimeToggled);
@@ -42,15 +43,18 @@ const Chart = ({ chartData, toggleStatisticType }) => {
   return (
     <Grid container>
       <Toggle changeHandler={handleStatisticToggle} labels={intervals} />
-      <Toggle changeHandler={handleChangeToggle} labels={times} />
-      {isStatisticTypeToggled && <Select />}
-      <div style={{ width: "100%", height: "250px", left: "-20px" }}>
+      <Toggle style={bootomGap} changeHandler={handleChangeToggle} labels={times} />
+      <Grid item style={{padding: "10px 0", minHeight: "50px", minWidth: "100%"}}>
+        {isStatisticTypeToggled && <Select />}
+      </Grid>
+
+      <div style={{width: "100%", height: "250px", left: "-20px", bottom: "-20px"}}>
         <ResponsiveContainer>
-          <BarChart width="100%" height={250} data={chartData}>
+          <BarChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="name" />
             <YAxis />
-            <Legend />
+            <Legend verticalAlign="bottom" />
             {isTimeToggled && (
               <Bar
                 barSize={10}

@@ -11,9 +11,9 @@ import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles({
   root: {
-    boxSizing: "border-box",
+    boxSizing: "content-box",
     boxShadow: "none",
-    maxWidth: "280px",
+    maxWidth: "100%"
   },
   accordionItem: {
     padding: "0",

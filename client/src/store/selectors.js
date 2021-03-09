@@ -1,26 +1,11 @@
 import { createSelector } from "reselect";
-import { StatisticType } from "../const";
+import { StatisticType, months } from "../const";
 import { NameSpace } from "./reducers/root";
 
 const Interval = {
   MONTH: (date) => date.getMonth(),
   YEAR: (date) => date.getFullYear(),
 };
-
-const months = [
-  "JAN",
-  "FEB",
-  "MAR",
-  "APR",
-  "MAY",
-  "JUN",
-  "JUL",
-  "AUG",
-  "SEP",
-  "OCT",
-  "NOV",
-  "DEC",
-];
 
 const sortByDate = (flightA, flightB) => {
   if (flightA.dateFlight - flightB.dateFlight > 0) {
@@ -172,9 +157,7 @@ export const getChartData = createSelector(
       statisticType,
       filter
     );
-    debugger;
     const allData = getAllData(actualChartData, plannedChartData) || [];
-    console.log(allData);
     return allData;
   }
 );
@@ -187,3 +170,25 @@ export const getYears = createSelector(
     return years;
   }
 );
+
+const findNextFlight = (flights) => {
+  const currentDate = new Date();
+  const [year, month] = [
+    currentDate.getFullYear(),
+    months[currentDate.getMonth()],
+  ];
+  const flightsByYears = groupByYears(flights, "YEAR");
+  const flightsByMonths = groupByMonths(flightsByYears, "MONTH", year);
+  const dayX = flightsByMonths[month]
+    .filter((flight) => flight.dateFlight > currentDate)
+    .sort(sortByDate)
+    .slice(-1)[0];
+
+  return dayX;
+};
+
+export const getNextFlight = (flights) => {
+  const filteredPlannedFlights = filterByPlanned(flights);
+  const nextFlight = findNextFlight(filteredPlannedFlights);
+  return nextFlight;
+};

@@ -10,6 +10,9 @@ import {
   Table,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import { connect } from "react-redux";
+import { NameSpace } from "../../store/reducers/root";
+import {months} from "../../const";
 
 const useStyles = makeStyles({
   grid: {
@@ -48,14 +51,25 @@ const createData = (name, data) => {
   return { name, data };
 };
 
-const NextFlight = () => {
+const NextFlight = ({ nextFlight }) => {
   const classes = useStyles();
 
+  let date = "";
+  let flightNumber = "";
+  let plnType = "";
+  let pln = "";
+  if (Object.keys(nextFlight).length) {
+    date = `${nextFlight.dateFlight.toLocaleTimeString().slice(0, 5)} ${nextFlight.dateFlight.getDate()} ${months[nextFlight.dateFlight.getMonth()]} ${nextFlight.dateFlight.getFullYear()}`;
+    flightNumber = nextFlight.flight;
+    plnType = nextFlight.plnType;
+    pln = nextFlight.pln;
+  }
+
   const rows = [
-    createData("Дата рейса", 123),
-    createData("Номер рейса", 123),
-    createData("Тип воздушного судна", 123),
-    createData("Бортовой номер судна", 123),
+    createData("Дата рейса", date),
+    createData("Номер рейса", flightNumber),
+    createData("Тип воздушного судна", plnType),
+    createData("Бортовой номер судна", pln),
   ];
 
   return (
@@ -102,4 +116,8 @@ const NextFlight = () => {
   );
 };
 
-export default NextFlight;
+const mapStateToProps = (state) => ({
+  nextFlight: state[NameSpace.FLIGHTS].nextFlight,
+});
+
+export default connect(mapStateToProps)(NextFlight);

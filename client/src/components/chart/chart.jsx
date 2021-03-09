@@ -53,7 +53,6 @@ const Chart = ({ chartData, toggleStatisticType }) => {
             <Legend />
             {isTimeToggled && (
               <Bar
-                onClick={handleBarClick}
                 barSize={10}
                 dataKey="actualTimeFlight"
                 name="Фактическое время налета"

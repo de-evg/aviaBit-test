@@ -9,11 +9,17 @@ const useStyles = makeStyles({
     fontWeight: 700,
     borderRadius: "5px"
   },
+  gridItem: {
+    flexBasis: "33%",
+    width: "33%",
+    flexGrow: "1"
+  }
 });
 
 const BlueSwitch = withStyles({
   switchBase: {
     color: "#4e85f5",
+    margin: "0 auto"
   },
   checked: {},
   track: { backgroundColor: "#4e85f5" },
@@ -33,16 +39,16 @@ const Toggle = ({ changeHandler, labels }) => {
   };
 
   return (
-    <Container>
-      <Grid component="label" container justify="center" alignItems="center">
-        <Grid item>
+    <Container style={{padding: "0"}}>
+      <Grid component="label" container justify="space-between" alignItems="center">
+        <Grid item className={classes.gridItem} style={{textAlign: "right"}}>
           <Typography
             className={classes.labelFont}
-            style={!state.checkedA ? { border: "2px solid #4e85f5", padding: "3px", } : {}}
+            style={!state.checkedA ? { border: "2px solid #4e85f5", padding: "3px",} : {}}
             component="p"
           >
             {leftLabel}
-          </Typography>{" "}
+          </Typography>
         </Grid>
         <Grid item>
           <BlueSwitch
@@ -53,7 +59,7 @@ const Toggle = ({ changeHandler, labels }) => {
             className={classes.switchBase}
           />
         </Grid>
-        <Grid item>
+        <Grid item className={classes.gridItem}>
           <Typography
             className={classes.labelFont}
             style={state.checkedA ? { border: "2px solid #4e85f5", padding: "3px"  } : {}}

@@ -3,7 +3,7 @@ import { StatisticType } from "../../../const";
 
 const initialState = {
   statisticType: StatisticType.YEARS,
-  filter: ""
+  filter: new Date().getFullYear()
 };
 
 export const statisticData = (state = initialState, action) => {

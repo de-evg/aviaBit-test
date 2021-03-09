@@ -16,7 +16,7 @@ import Toggle from "../toggle/toggle";
 import { Grid } from "@material-ui/core";
 import { ActionCreator } from "../../store/action";
 import { StatisticType } from "../../const";
-import SimpleSelect from "../select/select";
+import Select from "../select/select";
 
 const times = ["Время работы", "Время налёта"];
 const intervals = ["Годы", "Месяцы"];
@@ -39,28 +39,14 @@ const Chart = ({ chartData, toggleStatisticType }) => {
     );
   }, [isStatisticTypeToggled, toggleStatisticType]);
 
-  const handleBarClick = useCallback((evt) => {
-    console.log("sss");
-  }, []);
-
   return (
     <Grid container>
       <Toggle changeHandler={handleStatisticToggle} labels={intervals} />
-      <SimpleSelect />
       <Toggle changeHandler={handleChangeToggle} labels={times} />
-      <div style={{ width: "100%", height: "250px" }}>
+      {isStatisticTypeToggled && <Select />}
+      <div style={{ width: "100%", height: "250px", left: "-20px" }}>
         <ResponsiveContainer>
-          <BarChart
-            width="100%"
-            height={250}
-            data={chartData}
-            margin={{
-              top: 20,
-              right: 0,
-              left: 0,
-              bottom: 5,
-            }}
-          >
+          <BarChart width="100%" height={250} data={chartData}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="name" />
             <YAxis />

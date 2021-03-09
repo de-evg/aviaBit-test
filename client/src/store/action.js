@@ -16,5 +16,5 @@ export const ActionCreator = {
   changeFilter: (filter) => ({
     type: "CHANGE_FILTER",
     payload: filter
-  })
+  }),
 };

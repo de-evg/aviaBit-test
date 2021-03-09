@@ -22,33 +22,39 @@ const months = [
   "DEC",
 ];
 
-const groupByYears = (flights, filter) => {
+const sortByDate = (flightA, flightB) => {
+  if (flightA.dateFlight - flightB.dateFlight > 0) {
+    return 1;
+  }
+
+  if (flightA.dateFlight - flightB.dateFlight < 0) {
+    return -1;
+  }
+
+  return 0;
+};
+
+const groupByYears = (flights, statisticType) => {
   return flights.reduce((result, flight) => {
-    const year = Interval[filter](flight.dateFlight);
+    const year = Interval[statisticType](flight.dateFlight);
     result[year] = result[year] || [];
     result[year].push(flight);
     return result;
   }, {});
 };
 
-const groupByMonths = (flightsByYears, filter) => {
-  const years = Object.keys(flightsByYears);
+const groupByMonths = (flightsByYears, statisticType, year) => {
   const Month = months.reduce((result, month) => {
     result[month] = [];
     return result;
   }, {});
 
-  return years.reduce((result, year) => {
-    const groupedByMonth = flightsByYears[year].reduce((MonthMap, flight) => {
-      const monthName = months[Interval[filter](flight.dateFlight)];
-      MonthMap[monthName].push(flight);
+  return flightsByYears[year].reduce((MonthMap, flight) => {
+    const monthName = months[Interval[statisticType](flight.dateFlight)];
+    MonthMap[monthName].push(flight);
 
-      return MonthMap;
-    }, Month);
-
-    result[year] = groupedByMonth;
-    return result;
-  }, {});
+    return MonthMap;
+  }, Month);
 };
 
 const filterByActual = (flights) => {
@@ -78,31 +84,30 @@ const convertToChartData = (flights, statisticType) => {
       }, []);
 
     case StatisticType.MONTHS:
-      return years.map((year) => {
-        return months.reduce((result, month) => {
-          if (!flights[year][month]) {
-            result.push({ name: `${year} ${month}` });
-          } else {
-            flights[year][month].forEach((flight) => {
-              flight.name = `${year} ${month}`;
-              result.push(flight);
-            });
-          }
-          return result;
-        }, []);
-      });
+      return months.reduce((statisticByMonths, month) => {
+        const monthStatistic = flights[month].reduce(
+          (time, flight) => {
+            time.timeFlight += flight.timeFlight || 0;
+            time.timeWork += flight.timeWork || 0;
+            return time;
+          },
+          { timeFlight: 0, timeWork: 0, name: month }
+        );
+        statisticByMonths.push(monthStatistic);
+        return statisticByMonths;
+      }, []);
 
     default:
-      return [];
+      return flights;
   }
 };
 
-const getGroupedData = (flights, statisticType) => {
+const getGroupedData = (flights, statisticType, filter) => {
   const flightsByYears = groupByYears(flights, "YEAR");
   const result =
     statisticType === StatisticType.YEARS
       ? flightsByYears
-      : groupByMonths(flightsByYears, "MONTH");
+      : groupByMonths(flightsByYears, "MONTH", filter);
   const convertedFlights = convertToChartData(result, statisticType);
   return convertedFlights;
 };
@@ -153,21 +158,32 @@ const getAllData = (actualChartData, plannedChartData) => {
 export const getChartData = createSelector(
   (state) => state[NameSpace.FLIGHTS].flights,
   (state) => state[NameSpace.STATISTIC].statisticType,
-  (flights, statisticType) => {
+  (state) => state[NameSpace.STATISTIC].filter,
+  (flights, statisticType, filter) => {
     const filteredActualFlights = filterByActual(flights);
     const filteredPlannedFlights = filterByPlanned(flights);
     const actualChartData = getGroupedData(
       filteredActualFlights,
-      statisticType
+      statisticType,
+      filter
     );
     const plannedChartData = getGroupedData(
       filteredPlannedFlights,
-      statisticType
+      statisticType,
+      filter
     );
-    console.log(actualChartData);
     debugger;
     const allData = getAllData(actualChartData, plannedChartData) || [];
     console.log(allData);
     return allData;
+  }
+);
+
+export const getYears = createSelector(
+  (state) => state[NameSpace.FLIGHTS].flights,
+  (flights) => {
+    const flightsByYears = groupByYears(flights, "YEAR");
+    const years = Object.keys(flightsByYears);
+    return years;
   }
 );

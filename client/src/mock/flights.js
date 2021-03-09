@@ -2,7 +2,7 @@ const FLIGHT_COUNT = 500;
 
 const FlightDate = {
   START: 2010,
-  END: 2021
+  END: 2022
 };
 
 const FlightNumber = {

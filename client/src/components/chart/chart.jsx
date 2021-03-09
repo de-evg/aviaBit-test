@@ -62,7 +62,6 @@ const Chart = ({ chartData, toggleStatisticType }) => {
             )}
             {isTimeToggled && (
               <Bar
-                onClick={handleBarClick}
                 barSize={10}
                 dataKey="plannedTimeFlight"
                 name="Плановое время налета"
@@ -72,7 +71,6 @@ const Chart = ({ chartData, toggleStatisticType }) => {
             )}
             {!isTimeToggled && (
               <Bar
-                onClick={handleBarClick}
                 barSize={10}
                 dataKey="actualTimeWork"
                 name="Фактическое время работы"
@@ -82,7 +80,6 @@ const Chart = ({ chartData, toggleStatisticType }) => {
             )}
             {!isTimeToggled && (
               <Bar
-                onClick={handleBarClick}
                 barSize={10}
                 dataKey="plannedTimeWork"
                 name="Плановое время работы"

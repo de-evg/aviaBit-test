@@ -1,5 +1,5 @@
 import React from "react";
-import { Typography, Avatar, Grid } from "@material-ui/core";
+import { Typography, Avatar, Grid, useMediaQuery } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
 
@@ -19,6 +19,7 @@ const useStyles = makeStyles({
 
 const User = () => {
   const classes = useStyles();
+  const matches = useMediaQuery(`(min-width: 600px)`);
 
   return (
     <Grid
@@ -28,6 +29,7 @@ const User = () => {
       alignContent="space-between"
       item
       className={classes.root}
+      style={matches ? {margin: "29px 0"} : null}
     >
       <Grid item>
         <Avatar

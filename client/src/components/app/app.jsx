@@ -29,8 +29,7 @@ const App = ({ isFlightsLoaded, getFlights }) => {
       },
       text: {
         primary: "#ffffff",
-        secondary: "#000000",
-        third: "#676565",
+        secondary: "#4e85f5",
       },
     },
     background: {

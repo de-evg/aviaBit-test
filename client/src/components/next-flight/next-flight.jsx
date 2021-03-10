@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import PropTypes from "prop-types";
 import {
   Grid,
@@ -9,12 +9,13 @@ import {
   TableRow,
   TableCell,
   Table,
+  useMediaQuery
 } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import { connect } from "react-redux";
-import { NameSpace } from "../../store/reducers/root";
-import { months } from "../../const";
-import { ActionCreator } from "../../store/action";
+import {makeStyles} from "@material-ui/core/styles";
+import {connect} from "react-redux";
+import {NameSpace} from "../../store/reducers/root";
+import {months} from "../../const";
+import {ActionCreator} from "../../store/action";
 
 const useStyles = makeStyles({
   grid: {
@@ -25,8 +26,10 @@ const useStyles = makeStyles({
   card: {
     boxShadow: "none",
   },
-  plane: {
+  media: {
+    maxWidth: "257px",
     marginBottom: "15px",
+    backgroundSize: "contain"
   },
   row: {
     display: "flex",
@@ -52,7 +55,7 @@ const useStyles = makeStyles({
 });
 
 const createData = (name, data) => {
-  return { name, data };
+  return {name, data};
 };
 
 const NextFlight = ({
@@ -62,6 +65,7 @@ const NextFlight = ({
   isFlightsLoaded,
 }) => {
   const classes = useStyles();
+  const matches = useMediaQuery(`(min-width: 600px)`);
 
   const [flightData, setFlightData] = useState({
     date: "",
@@ -69,7 +73,7 @@ const NextFlight = ({
     plnType: "",
     pln: "",
   });
-  const { date, flightNumber, plnType, pln } = flightData;
+  const {date, flightNumber, plnType, pln} = flightData;
 
   useEffect(() => {
     if (!isNextFlightFinded && isFlightsLoaded) {
@@ -82,9 +86,8 @@ const NextFlight = ({
       setFlightData({
         date: `${nextFlight.dateFlight
           .toLocaleTimeString()
-          .slice(0, 5)} ${nextFlight.dateFlight.getDate()} ${
-          months[nextFlight.dateFlight.getMonth()]
-        } ${nextFlight.dateFlight.getFullYear()}`,
+          .slice(0, 5)} ${nextFlight.dateFlight.getDate()} ${months[nextFlight.dateFlight.getMonth()]
+          } ${nextFlight.dateFlight.getFullYear()}`,
         flightNumber: nextFlight.flight,
         plnType: nextFlight.plnType,
         pln: nextFlight.pln,
@@ -103,18 +106,20 @@ const NextFlight = ({
     <p>Загрузка...</p>
   ) : (
     <Grid item className={classes.grid}>
-      <Card className={classes.card}>
+      <Card className={classes.card} align="center">
         <CardMedia
           component="img"
           alt="Plane type"
-          width="257"
-          height="89"
+          maxWidth={matches ? 372 : 257}
+          height={matches ? 104 : 89}
           image="./img/plane.png"
           title="Plane type"
-          className={classes.plane}
+          className={classes.media}
+          style={matches ? {maxWidth: "372px"} : null}
+          
         />
       </Card>
-      <CardContent style={{ padding: 0 }}>
+      <CardContent style={{padding: 0}}>
         <Table>
           <TableBody>
             {rows.map((row) => (

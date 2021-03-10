@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import PropTypes from "prop-types";
 import { Switch, Typography, Grid, Container } from "@material-ui/core";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 
@@ -7,19 +8,19 @@ const useStyles = makeStyles({
     padding: "5px",
     fontSize: "12px",
     fontWeight: 700,
-    borderRadius: "5px"
+    borderRadius: "5px",
   },
   gridItem: {
     flexBasis: "33%",
     width: "33%",
-    flexGrow: "1"
-  }
+    flexGrow: "1",
+  },
 });
 
 const BlueSwitch = withStyles({
   switchBase: {
     color: "#4e85f5",
-    margin: "0 auto"
+    margin: "0 auto",
   },
   checked: {},
   track: { backgroundColor: "#4e85f5" },
@@ -39,12 +40,21 @@ const Toggle = ({ changeHandler, labels }) => {
   };
 
   return (
-    <Container style={{padding: "0"}}>
-      <Grid component="label" container justify="space-between" alignItems="center">
-        <Grid item className={classes.gridItem} style={{textAlign: "right"}}>
+    <Container style={{ padding: "0" }}>
+      <Grid
+        component="label"
+        container
+        justify="space-between"
+        alignItems="center"
+      >
+        <Grid item className={classes.gridItem} style={{ textAlign: "right" }}>
           <Typography
             className={classes.labelFont}
-            style={!state.checkedA ? { border: "2px solid #4e85f5", padding: "3px",} : {}}
+            style={
+              !state.checkedA
+                ? { border: "2px solid #4e85f5", padding: "3px" }
+                : {}
+            }
             component="p"
           >
             {leftLabel}
@@ -62,7 +72,11 @@ const Toggle = ({ changeHandler, labels }) => {
         <Grid item className={classes.gridItem}>
           <Typography
             className={classes.labelFont}
-            style={state.checkedA ? { border: "2px solid #4e85f5", padding: "3px"  } : {}}
+            style={
+              state.checkedA
+                ? { border: "2px solid #4e85f5", padding: "3px" }
+                : {}
+            }
             component="p"
           >
             {rightLabel}
@@ -71,6 +85,11 @@ const Toggle = ({ changeHandler, labels }) => {
       </Grid>
     </Container>
   );
+};
+
+Toggle.propTypes = {
+  changeHandler: PropTypes.func.isRequired,
+  labels: PropTypes.array.isRequired,
 };
 
 export default Toggle;

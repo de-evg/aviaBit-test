@@ -1,8 +1,5 @@
 import React from "react";
-import {
-  Typography,
-  Grid,
-} from "@material-ui/core";
+import { Typography, Grid } from "@material-ui/core";
 import Chart from "../chart/chart";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -10,7 +7,7 @@ const useStyles = makeStyles({
   label: {
     color: "#676565",
     fontWeight: 400,
-    fontSize: "12px"
+    fontSize: "12px",
   },
   userMail: {
     color: "#676565",
@@ -19,7 +16,7 @@ const useStyles = makeStyles({
   expandIcon: {
     position: "relative",
     color: "#4e85f5",
-  }
+  },
 });
 
 const FlightStatistic = () => {

@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { Container, Box, Typography, useMediaQuery } from "@material-ui/core";
 import Chart from "../chart/chart";
 

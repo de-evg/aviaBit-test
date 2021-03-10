@@ -15,9 +15,8 @@ const App = ({ isFlightsLoaded, getFlights }) => {
       MuiCssBaseline: {
         "@global": {
           body: {
-            backgroundColor: "#ffffff"
+            backgroundColor: "#ffffff",
           },
-
         },
       },
     },

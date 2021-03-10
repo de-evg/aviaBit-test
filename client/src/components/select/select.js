@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
+import PropTypes from 'prop-types'
 import { connect } from "react-redux";
 import { NameSpace } from "../../store/reducers/root";
 import { makeStyles } from "@material-ui/core/styles";
@@ -37,7 +38,9 @@ const SimpleSelect = ({ filter, setFilter, years }) => {
   const handleChange = (evt) => {
     setFilter(evt.target.value);
   };
-
+  if (filter === undefined) {
+    debugger;
+  }
   return (
     <Container style={{padding: "0"}}>
       <Grid container className={classes.grid}>
@@ -52,8 +55,8 @@ const SimpleSelect = ({ filter, setFilter, years }) => {
             onChange={handleChange}
             label="Year"
           >
-            {years.map((year) => (
-              <MenuItem value={year}>{year}</MenuItem>
+            {years.map((year, i) => (
+              <MenuItem key={`${year}-${i}`} value={year}>{year}</MenuItem>
             ))}
           </Select>
         </FormControl>
@@ -62,8 +65,14 @@ const SimpleSelect = ({ filter, setFilter, years }) => {
   );
 };
 
+SimpleSelect.propTypes = {
+  filter: PropTypes.string.isRequired,
+  setFilter: PropTypes.func.isRequired,
+  years: PropTypes.array.isRequired
+};
+
 const mapStateToProps = (state) => ({
-  year: state[NameSpace.STATISTIC].filter,
+  filter: state[NameSpace.STATISTIC].filter,
   years: getYears(state),
 });
 

@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 import {
   Grid,
   Card,
@@ -12,7 +13,8 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import { NameSpace } from "../../store/reducers/root";
-import {months} from "../../const";
+import { months } from "../../const";
+import { ActionCreator } from "../../store/action";
 
 const useStyles = makeStyles({
   grid: {
@@ -27,6 +29,8 @@ const useStyles = makeStyles({
     marginBottom: "15px",
   },
   row: {
+    display: "flex",
+    justifyContent: "space-between",
     marginBottom: "13px",
   },
   th: {
@@ -51,19 +55,42 @@ const createData = (name, data) => {
   return { name, data };
 };
 
-const NextFlight = ({ nextFlight }) => {
+const NextFlight = ({
+  nextFlight,
+  isNextFlightFinded,
+  searchNextFlight,
+  isFlightsLoaded,
+}) => {
   const classes = useStyles();
 
-  let date = "";
-  let flightNumber = "";
-  let plnType = "";
-  let pln = "";
-  if (Object.keys(nextFlight).length) {
-    date = `${nextFlight.dateFlight.toLocaleTimeString().slice(0, 5)} ${nextFlight.dateFlight.getDate()} ${months[nextFlight.dateFlight.getMonth()]} ${nextFlight.dateFlight.getFullYear()}`;
-    flightNumber = nextFlight.flight;
-    plnType = nextFlight.plnType;
-    pln = nextFlight.pln;
-  }
+  const [flightData, setFlightData] = useState({
+    date: "",
+    flightNumber: "",
+    plnType: "",
+    pln: "",
+  });
+  const { date, flightNumber, plnType, pln } = flightData;
+
+  useEffect(() => {
+    if (!isNextFlightFinded && isFlightsLoaded) {
+      searchNextFlight();
+    }
+  }, [isNextFlightFinded, searchNextFlight, isFlightsLoaded]);
+
+  useEffect(() => {
+    if (isNextFlightFinded) {
+      setFlightData({
+        date: `${nextFlight.dateFlight
+          .toLocaleTimeString()
+          .slice(0, 5)} ${nextFlight.dateFlight.getDate()} ${
+          months[nextFlight.dateFlight.getMonth()]
+        } ${nextFlight.dateFlight.getFullYear()}`,
+        flightNumber: nextFlight.flight,
+        plnType: nextFlight.plnType,
+        pln: nextFlight.pln,
+      });
+    }
+  }, [isNextFlightFinded, nextFlight, setFlightData]);
 
   const rows = [
     createData("Дата рейса", date),
@@ -72,7 +99,9 @@ const NextFlight = ({ nextFlight }) => {
     createData("Бортовой номер судна", pln),
   ];
 
-  return (
+  return !isNextFlightFinded ? (
+    <p>Загрузка...</p>
+  ) : (
     <Grid item className={classes.grid}>
       <Card className={classes.card}>
         <CardMedia
@@ -90,23 +119,13 @@ const NextFlight = ({ nextFlight }) => {
           <TableBody>
             {rows.map((row) => (
               <TableRow key={row.name} className={classes.row}>
-                <Grid container justify="space-between">
-                  <TableCell
-                    component="th"
-                    variant="head"
-                    className={classes.th}
-                  >
-                    {row.name}
-                  </TableCell>
+                <TableCell component="th" variant="head" className={classes.th}>
+                  {row.name}
+                </TableCell>
 
-                  <TableCell
-                    variant="body"
-                    className={classes.td}
-                    align="right"
-                  >
-                    {row.data}
-                  </TableCell>
-                </Grid>
+                <TableCell variant="body" className={classes.td} align="right">
+                  {row.data}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -116,8 +135,23 @@ const NextFlight = ({ nextFlight }) => {
   );
 };
 
+NextFlight.propTypes = {
+  nextFlight: PropTypes.object.isRequired,
+  searchNextFlight: PropTypes.func.isRequired,
+  isFlightsLoaded: PropTypes.bool.isRequired,
+  isNextFlightFinded: PropTypes.bool.isRequired,
+};
+
 const mapStateToProps = (state) => ({
   nextFlight: state[NameSpace.FLIGHTS].nextFlight,
+  isFlightsLoaded: state[NameSpace.FLIGHTS].isFlightsLoaded,
+  isNextFlightFinded: state[NameSpace.FLIGHTS].isNextFlightFinded,
 });
 
-export default connect(mapStateToProps)(NextFlight);
+const mapDispatchToProps = (dispatch) => ({
+  searchNextFlight() {
+    dispatch(ActionCreator.setNextFlight());
+  },
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(NextFlight);

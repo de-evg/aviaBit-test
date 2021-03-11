@@ -1,22 +1,89 @@
 import React from "react";
 import { Container, Box, Typography, useMediaQuery } from "@material-ui/core";
-import Chart from "../chart/chart";
+import { makeStyles } from "@material-ui/core/styles";
+import { connect } from "react-redux";
+import { NameSpace } from "../../store/reducers/root";
+import DetailsTable from "../details-table/details-table";
+import CollapsibleTable from "../collapsible-table/collapsible-table";
 
-const DetailsPage = () => {
+const createData = (name, data) => {
+  return { name, data };
+};
+
+const useStyles = makeStyles({
+  header: {
+    backgroundColor: "#4e85f5",
+    padding: "28px 0 8px 20px",
+  },
+  main: {
+    padding: "15px 20px 13px 20px",
+  },
+  title: {
+    fontWeight: 700,
+    margin: 0,
+  },
+  grid: {
+    flexDirection: "column",
+    wrap: "wrap",
+  },
+  gridItem: {
+    width: "100%",
+  },
+});
+
+const DetailsPage = ({ statsByInterval }) => {
+  const classes = useStyles();
   const matches = useMediaQuery(`(min-width: 600px)`);
+  const {
+    actualTimeFlight,
+    actualTimeBlock,
+    actualTimeNight,
+    actualTimeBiologicalNight,
+    actualTimeWork,
+    plannedTimeFlight,
+    plannedTimeBlock,
+    plannedTimeNight,
+    plannedTimeBiologicalNight,
+    plannedTimeWork,
+    interval,
+  } = statsByInterval;
+
+  const actualDataRows = [
+    createData("Общее время налёта", actualTimeFlight),
+    createData("Общее полётное время", actualTimeBlock),
+    createData("Общее ночное время", actualTimeNight),
+    createData("Общее время биологической ночи", actualTimeBiologicalNight),
+    createData("Общее рабочее время", actualTimeWork),
+  ];
+
+  const plannedDataRows = [
+    createData("Общее время налёта", plannedTimeFlight),
+    createData("Общее полётное время", plannedTimeBlock),
+    createData("Общее ночное время", plannedTimeNight),
+    createData("Общее время биологической ночи", plannedTimeBiologicalNight),
+    createData("Общее рабочее время", plannedTimeWork),
+  ];
 
   return (
-    <Container maxWidth="xs">
-      <Box my={4} textAlign="center">
+    <Container maxWidth={matches ? "md" : "xs"}>
+      <Box my={4} textAlign="center" className={classes.main}>
         <Typography variant={matches ? "h4" : "h5"} component="h2" gutterBottom>
-          Детали
+          {`Статистика за ${interval}`}
         </Typography>
-        <Box minHeight="400px">
-          <Chart my={4} />
-        </Box>
+        <Container maxWidth={matches ? "sm" : "xs"}>
+          <Box my={10}>
+            <DetailsTable title={"Фактическое время"} rows={actualDataRows} />
+            <DetailsTable title={"Плановое время"} rows={plannedDataRows} />
+          </Box>
+        </Container>
+        <CollapsibleTable />
       </Box>
     </Container>
   );
 };
 
-export default DetailsPage;
+const mapStateToProps = (state) => ({
+  statsByInterval: state[NameSpace.STATISTIC].statsByInterval,
+});
+
+export default connect(mapStateToProps)(DetailsPage);

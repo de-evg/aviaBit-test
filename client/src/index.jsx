@@ -10,7 +10,6 @@ const store = createStore(root, composeWithDevTools());
 
 render(
   <Provider store={store}>
-
     <App />
   </Provider>,
   document.getElementById("root")

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import {
   Grid,
@@ -9,13 +9,13 @@ import {
   TableRow,
   TableCell,
   Table,
-  useMediaQuery
+  useMediaQuery,
 } from "@material-ui/core";
-import {makeStyles} from "@material-ui/core/styles";
-import {connect} from "react-redux";
-import {NameSpace} from "../../store/reducers/root";
-import {months} from "../../const";
-import {ActionCreator} from "../../store/action";
+import { makeStyles } from "@material-ui/core/styles";
+import { connect } from "react-redux";
+import { NameSpace } from "../../store/reducers/root";
+import { months } from "../../const";
+import { ActionCreator } from "../../store/action";
 
 const useStyles = makeStyles({
   grid: {
@@ -29,7 +29,7 @@ const useStyles = makeStyles({
   media: {
     maxWidth: "257px",
     marginBottom: "15px",
-    backgroundSize: "contain"
+    backgroundSize: "contain",
   },
   row: {
     display: "flex",
@@ -55,7 +55,7 @@ const useStyles = makeStyles({
 });
 
 const createData = (name, data) => {
-  return {name, data};
+  return { name, data };
 };
 
 const NextFlight = ({
@@ -73,7 +73,7 @@ const NextFlight = ({
     plnType: "",
     pln: "",
   });
-  const {date, flightNumber, plnType, pln} = flightData;
+  const { date, flightNumber, plnType, pln } = flightData;
 
   useEffect(() => {
     if (!isNextFlightFinded && isFlightsLoaded) {
@@ -86,8 +86,9 @@ const NextFlight = ({
       setFlightData({
         date: `${nextFlight.dateFlight
           .toLocaleTimeString()
-          .slice(0, 5)} ${nextFlight.dateFlight.getDate()} ${months[nextFlight.dateFlight.getMonth()]
-          } ${nextFlight.dateFlight.getFullYear()}`,
+          .slice(0, 5)} ${nextFlight.dateFlight.getDate()} ${
+          months[nextFlight.dateFlight.getMonth()]
+        } ${nextFlight.dateFlight.getFullYear()}`,
         flightNumber: nextFlight.flight,
         plnType: nextFlight.plnType,
         pln: nextFlight.pln,
@@ -105,7 +106,11 @@ const NextFlight = ({
   return !isNextFlightFinded ? (
     <p>Загрузка...</p>
   ) : (
-    <Grid item className={classes.grid}>
+    <Grid
+      item
+      className={classes.grid}
+      style={matches ? { borderBottom: "none" } : null}
+    >
       <Card className={classes.card} align="center">
         <CardMedia
           component="img"
@@ -115,11 +120,10 @@ const NextFlight = ({
           image="./img/plane.png"
           title="Plane type"
           className={classes.media}
-          style={matches ? {maxWidth: "372px"} : null}
-          
+          style={matches ? { maxWidth: "372px" } : null}
         />
       </Card>
-      <CardContent style={{padding: 0}}>
+      <CardContent style={{ padding: 0 }}>
         <Table>
           <TableBody>
             {rows.map((row) => (

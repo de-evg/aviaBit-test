@@ -15,20 +15,16 @@ import { getChartData } from "../../store/selectors";
 import Toggle from "../toggle/toggle";
 import { Grid } from "@material-ui/core";
 import { ActionCreator } from "../../store/action";
-import { StatisticType } from "../../const";
+import { AppRoute, StatisticType } from "../../const";
 import Select from "../select/select";
+import {useHistory} from "react-router";
 
 const times = ["Время работы", "Время налёта"];
 const intervals = ["Годы", "Месяцы"];
 
-const Chart = ({ chartData, toggleStatisticType }) => {
-  let viewPortWidth;
-  if (window.innerWidth !== undefined) {
-    viewPortWidth = window.innerWidth;
-  } else {
-    viewPortWidth = document.documentElement.clientWidth;
-  }
-  console.log(viewPortWidth);
+const Chart = ({ chartData, toggleStatisticType, updateDetailsInterval }) => {
+  let history = useHistory();
+  console.log(history);
 
   const [isTimeToggled, setTimeToggle] = useState(false);
   const [isStatisticTypeToggled, setStatisticToggle] = useState(false);
@@ -49,6 +45,11 @@ const Chart = ({ chartData, toggleStatisticType }) => {
       isStatisticTypeToggled ? StatisticType.MONTHS : StatisticType.YEARS
     );
   }, [isStatisticTypeToggled, toggleStatisticType]);
+
+  const handleBarClick = useCallback((evt) => {
+    updateDetailsInterval(evt.payload);
+    history.push(AppRoute.DETAILS);
+  }, [updateDetailsInterval, history]);
 
   return (
     <Grid container>
@@ -78,12 +79,18 @@ const Chart = ({ chartData, toggleStatisticType }) => {
               margin={{ left: -25, right: 10 }}
             >
               <CartesianGrid strokeDasharray="3 3" />
-              <Legend wrapperStyle={{ position: 'relative' }} layout="horizontal" verticalAlign="bottom" align="right"/>
+              <Legend
+                wrapperStyle={{ position: "relative" }}
+                layout="horizontal"
+                verticalAlign="bottom"
+                align="right"
+              />
               <XAxis dataKey="name" />
               <YAxis />
 
               {isTimeToggled && (
                 <Bar
+                  onClick={handleBarClick}
                   barSize={10}
                   dataKey="actualTimeFlight"
                   name="Фактическое время налета"
@@ -93,6 +100,7 @@ const Chart = ({ chartData, toggleStatisticType }) => {
               )}
               {isTimeToggled && (
                 <Bar
+                  onClick={handleBarClick}
                   barSize={10}
                   dataKey="plannedTimeFlight"
                   name="Плановое время налета"
@@ -102,6 +110,7 @@ const Chart = ({ chartData, toggleStatisticType }) => {
               )}
               {!isTimeToggled && (
                 <Bar
+                  onClick={handleBarClick}
                   barSize={10}
                   dataKey="actualTimeWork"
                   name="Фактическое время работы"
@@ -111,6 +120,7 @@ const Chart = ({ chartData, toggleStatisticType }) => {
               )}
               {!isTimeToggled && (
                 <Bar
+                  onClick={handleBarClick}
                   barSize={10}
                   dataKey="plannedTimeWork"
                   name="Плановое время работы"
@@ -129,6 +139,7 @@ const Chart = ({ chartData, toggleStatisticType }) => {
 Chart.propTypes = {
   chartData: PropTypes.array.isRequired,
   toggleStatisticType: PropTypes.func.isRequired,
+  updateDetailsInterval: PropTypes.func.isRequired
 };
 
 const mapStateToProps = (state) => ({
@@ -138,6 +149,9 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   toggleStatisticType(type) {
     dispatch(ActionCreator.changeStatisticType(type));
+  },
+  updateDetailsInterval(interval) {
+    dispatch(ActionCreator.setDetailsInterval(interval));
   },
 });
 

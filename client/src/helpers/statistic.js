@@ -5,6 +5,12 @@ const Interval = {
   YEAR: (date) => date.getFullYear(),
 };
 
+export const findYears = (flights) => {
+  const flightsByYears = groupByYears(flights, "YEAR");
+  const years = Object.keys(flightsByYears);
+  return years;
+};
+
 export const groupByYears = (flights, statisticType) => {
   return flights.reduce((result, flight) => {
     const year = Interval[statisticType](flight.dateFlight);
@@ -20,6 +26,9 @@ export const groupByMonths = (flightsByYears, statisticType, year) => {
     return result;
   }, {});
 
+  if (!flightsByYears[year]) {
+    return Month;
+  }
   return flightsByYears[year].reduce((MonthMap, flight) => {
     const monthName = months[Interval[statisticType](flight.dateFlight)];
     MonthMap[monthName].push(flight);
@@ -28,15 +37,12 @@ export const groupByMonths = (flightsByYears, statisticType, year) => {
   }, Month);
 };
 
-export const filterByActual = (flights) => {
-  return flights.filter((flight) => !flight.type);
-};
+export const filterByActual = (flights) =>
+  flights.filter((flight) => !flight.type);
+export const filterByPlanned = (flights) =>
+  flights.filter((flight) => !!flight.type);
 
-export const filterByPlanned = (flights) => {
-  return flights.filter((flight) => !!flight.type);
-};
-
-const convertToChartData = (flights, statisticType, filter) => {
+export const convertToChartData = (flights, statisticType, filter) => {
   const years = Object.keys(flights);
   switch (statisticType) {
     case StatisticType.YEARS:
@@ -57,7 +63,7 @@ const convertToChartData = (flights, statisticType, filter) => {
             timeNight: 0,
             timeBiologicalNight: 0,
             name: year,
-            interval: year
+            interval: year,
           }
         );
 
@@ -83,7 +89,7 @@ const convertToChartData = (flights, statisticType, filter) => {
             timeNight: 0,
             timeBiologicalNight: 0,
             name: month,
-            interval: `${month} ${filter}`
+            interval: `${month} ${filter}`,
           }
         );
         statisticByMonths.push(monthStatistic);
@@ -101,69 +107,59 @@ export const getGroupedData = (flights, statisticType, filter) => {
     statisticType === StatisticType.YEARS
       ? flightsByYears
       : groupByMonths(flightsByYears, "MONTH", filter);
-  const convertedFlights = convertToChartData(result, statisticType, filter);
-  return convertedFlights;
+  return result;
 };
 
 const convertSecToHours = (sec) => Math.floor(sec / 3600);
 
 export const getAllData = (actualChartData, plannedChartData) => {
-  if (
-    Object.keys(actualChartData).length &&
-    Object.keys(plannedChartData).length
-  ) {
-    const intervals = new Set();
-    actualChartData.forEach((flight) => {
-      intervals.add(flight.name);
-    });
-    plannedChartData.forEach((flight) => {
-      intervals.add(flight.name);
-    });
+  const intervals = new Set();
+  actualChartData.forEach((flight) => {
+    intervals.add(flight.name);
+  });
+  plannedChartData.forEach((flight) => {
+    intervals.add(flight.name);
+  });
 
-    const allData = [...intervals].reduce((result, interval) => {
-      const statisctic = {};
-      const actualFlight = actualChartData.filter((data) => data.name === interval);
-      const plannedFlight = plannedChartData.filter(
-        (data) => data.name === interval
+  const allData = [...intervals].reduce((result, interval) => {
+    const statisctic = {};
+    const actualFlight = actualChartData.filter(
+      (data) => data.name === interval
+    );
+    const plannedFlight = plannedChartData.filter(
+      (data) => data.name === interval
+    );
+    if (actualFlight.length) {
+      statisctic.actualTimeFlight = convertSecToHours(
+        actualFlight[0].timeFlight
       );
-      if (actualFlight.length) {
-        statisctic.actualTimeFlight = convertSecToHours(
-          actualFlight[0].timeFlight
-        );
-        statisctic.actualTimeWork = convertSecToHours(actualFlight[0].timeWork);
-        statisctic.actualTimeBlock = convertSecToHours(
-          actualFlight[0].timeBlock
-        );
-        statisctic.actualTimeNight = convertSecToHours(
-          actualFlight[0].timeNight
-        );
-        statisctic.actualTimeBiologicalNight = convertSecToHours(
-          actualFlight[0].timeBiologicalNight
-        );
-        statisctic.interval = actualFlight[0].interval;
-      }
-      if (plannedFlight.length) {
-        statisctic.plannedTimeFlight = convertSecToHours(
-          plannedFlight[0].timeFlight
-        );
-        statisctic.plannedTimeWork = convertSecToHours(
-          plannedFlight[0].timeWork
-        );
-        statisctic.plannedTimeBlock = convertSecToHours(
-          plannedFlight[0].timeBlock
-        );
-        statisctic.plannedTimeNight = convertSecToHours(
-          plannedFlight[0].timeNight
-        );
-        statisctic.plannedTimeBiologicalNight = convertSecToHours(
-          plannedFlight[0].timeBiologicalNight
-        );
-        statisctic.interval = plannedFlight[0].interval;
-      }
-      statisctic.name = interval;
-      result.push(statisctic);
-      return result;
-    }, []);
-    return allData;
-  }
+      statisctic.actualTimeWork = convertSecToHours(actualFlight[0].timeWork);
+      statisctic.actualTimeBlock = convertSecToHours(actualFlight[0].timeBlock);
+      statisctic.actualTimeNight = convertSecToHours(actualFlight[0].timeNight);
+      statisctic.actualTimeBiologicalNight = convertSecToHours(
+        actualFlight[0].timeBiologicalNight
+      );
+      statisctic.interval = actualFlight[0].interval;
+    }
+    if (plannedFlight.length) {
+      statisctic.plannedTimeFlight = convertSecToHours(
+        plannedFlight[0].timeFlight
+      );
+      statisctic.plannedTimeWork = convertSecToHours(plannedFlight[0].timeWork);
+      statisctic.plannedTimeBlock = convertSecToHours(
+        plannedFlight[0].timeBlock
+      );
+      statisctic.plannedTimeNight = convertSecToHours(
+        plannedFlight[0].timeNight
+      );
+      statisctic.plannedTimeBiologicalNight = convertSecToHours(
+        plannedFlight[0].timeBiologicalNight
+      );
+      statisctic.interval = plannedFlight[0].interval;
+    }
+    statisctic.name = interval;
+    result.push(statisctic);
+    return result;
+  }, []);
+  return allData;
 };

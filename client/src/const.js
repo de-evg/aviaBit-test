@@ -22,3 +22,7 @@ export const months = [
   "NOV",
   "DEC",
 ];
+
+export const APIRoute = {
+  FETCH_FLIGHTS: "/flights"
+};

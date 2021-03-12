@@ -1,6 +1,6 @@
-import { generateFlights } from "../../../mock/flights";
 import { ActionType } from "../../action";
 import { getNextFlight } from "../../../helpers/flights";
+import { adaptServerToClient } from "../../../helpers/adapter";
 
 const initialState = {
   flights: [],
@@ -12,16 +12,32 @@ const initialState = {
     pln: "",
   },
   isNextFlightFinded: false,
+  noNextFlight: false,
 };
 
 export const flightsData = (state = initialState, action) => {
   switch (action.type) {
     case ActionType.LOAD_FLIGHTS:
-      const flights = generateFlights();
-      return { ...state, flights, isFlightsLoaded: true };
+      const apdaptedFlights = action.payload.map((flight) =>
+        adaptServerToClient(flight)
+      );
+      return { ...state, flights: apdaptedFlights, isFlightsLoaded: true };
     case ActionType.SEARCH_NEXT_FLIGHT:
       const nextFlight = getNextFlight(state.flights);
-      return { ...state, nextFlight: nextFlight, isNextFlightFinded: true };
+      if (!nextFlight.length) {
+        return {
+          ...state,
+          nextFlight: {
+            date: "",
+            flightNumber: "",
+            plnType: "",
+            pln: "",
+          },
+          isNextFlightFinded: false,
+          noNextFlight: true,
+        };
+      }
+      return { ...state, nextFlight: nextFlight, isNextFlightFinded: true, noNextFlight: false, };
 
     default:
       return state;

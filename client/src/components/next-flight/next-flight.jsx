@@ -115,7 +115,7 @@ const NextFlight = ({
         <CardMedia
           component="img"
           alt="Plane type"
-          maxWidth={matches ? 372 : 257}
+          width={matches ? 372 : 257}
           height={matches ? 104 : 89}
           image="./img/plane.png"
           title="Plane type"

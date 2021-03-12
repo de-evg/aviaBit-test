@@ -5,7 +5,8 @@ import {
   filterByPlanned,
   getGroupedData,
   getAllData,
-  groupByYears,
+  findYears,
+  convertToChartData,
 } from "../helpers/statistic";
 
 export const getChartData = createSelector(
@@ -15,16 +16,20 @@ export const getChartData = createSelector(
   (flights, statisticType, filter) => {
     const filteredActualFlights = filterByActual(flights);
     const filteredPlannedFlights = filterByPlanned(flights);
-    const actualChartData = getGroupedData(
+    const actualFlights = getGroupedData(
       filteredActualFlights,
       statisticType,
       filter
     );
-    const plannedChartData = getGroupedData(
+    const plannedFlights = getGroupedData(
       filteredPlannedFlights,
       statisticType,
       filter
     );
+
+    const actualChartData = convertToChartData(actualFlights, statisticType, filter);
+    const plannedChartData = convertToChartData(plannedFlights, statisticType, filter);
+
     const allData = getAllData(actualChartData, plannedChartData) || [];
     return allData;
   }
@@ -33,8 +38,15 @@ export const getChartData = createSelector(
 export const getYears = createSelector(
   (state) => state[NameSpace.FLIGHTS].flights,
   (flights) => {
-    const flightsByYears = groupByYears(flights, "YEAR");
-    const years = Object.keys(flightsByYears);
-    return years;
+    return findYears(flights);
+  }
+);
+
+export const getFlightsForInterval = createSelector(
+  (state) => state[NameSpace.FLIGHTS].flights,
+  (state) => state[NameSpace.STATISTIC].statisticType,
+  (state) => state[NameSpace.STATISTIC].filter,
+  (flights, statisticType, filter) => {
+    return getGroupedData(flights, statisticType, filter);
   }
 );

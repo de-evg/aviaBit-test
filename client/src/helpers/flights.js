@@ -20,8 +20,8 @@ const findNextFlight = (flights) => {
   while (!dayX) {
     month = currentDate.getMonth() + 1;
     if (month === NEXT_YEAR) {
-      year = currentDate.getFullYear() + 1;
-      month = 0;
+      dayX = "not fined"
+      break;
     }
     dayX = flightsByMonths[months[month]]
       .filter((flight) => flight.dateFlight > currentDate)
@@ -34,10 +34,9 @@ const findNextFlight = (flights) => {
 
 export const getNextFlight = (flights) => {
   const filteredPlannedFlights = filterByPlanned(flights);
-  const nextFlight = findNextFlight(filteredPlannedFlights);
-  if (!nextFlight) {
-    debugger;
+  if (!filteredPlannedFlights.length) {
+    return filteredPlannedFlights;
   }
-  console.log(nextFlight);
+  const nextFlight = findNextFlight(filteredPlannedFlights);
   return nextFlight;
 };

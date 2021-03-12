@@ -1,5 +1,4 @@
 import React, { useCallback, useState } from "react";
-import PropTypes from "prop-types";
 import {
   Container,
   Box,
@@ -14,6 +13,11 @@ import AccordionContainer from "../accordion-container/accordion-container";
 import FlightStatistic from "../flight-statistic/flight-statistic";
 import ShowMoreBtn from "../show-chart-btn/show-chart-btn";
 import Chart from "../chart/chart";
+import SimpleBreadcrumbs from "../simple-breadcrumbs/simple-breadcrumbs";
+import { AppRoute } from "../../const";
+import { connect } from "react-redux";
+import { NameSpace } from "../../store/reducers/root";
+import NoPlannedFlights from "../no-planned-flights/no-planned-flights";
 
 const useStyles = makeStyles({
   header: {
@@ -36,7 +40,7 @@ const useStyles = makeStyles({
   },
 });
 
-const MainPage = ({ history }) => {
+const MainPage = ({ noNextFlight }) => {
   const classes = useStyles();
   const matches = useMediaQuery(`(min-width: 600px)`);
   const [isChartShowed, setChartShowStatus] = useState(false);
@@ -55,6 +59,7 @@ const MainPage = ({ history }) => {
             : null
         }
       >
+        <SimpleBreadcrumbs currentRoute={AppRoute.MAIN} />
         <Container
           maxWidth={matches ? "xl" : "xs"}
           style={matches ? { padding: "0 17%" } : null}
@@ -96,7 +101,7 @@ const MainPage = ({ history }) => {
             className={classes.gridItem}
             style={matches ? { width: "50%", padding: "29px 0 33px 0" } : null}
           >
-            <NextFlight />
+            {noNextFlight ? <NoPlannedFlights /> : <NextFlight />}
           </Grid>
           {matches ? (
             <Grid
@@ -144,8 +149,8 @@ const MainPage = ({ history }) => {
   );
 };
 
-MainPage.propTypes = {
-  history: PropTypes.object.isRequired,
-};
+const mapStateToProps = (state) => ({
+  noNextFlight: state[NameSpace.FLIGHTS].noNextFlight,
+});
 
-export default MainPage;
+export default connect(mapStateToProps)(MainPage);

@@ -24,7 +24,6 @@ const intervals = ["Годы", "Месяцы"];
 
 const Chart = ({ chartData, toggleStatisticType, updateDetailsInterval }) => {
   let history = useHistory();
-  console.log(history);
 
   const [isTimeToggled, setTimeToggle] = useState(false);
   const [isStatisticTypeToggled, setStatisticToggle] = useState(false);

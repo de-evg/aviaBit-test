@@ -14,8 +14,28 @@ import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
-import {connect} from "react-redux";
-import {NameSpace} from "../../store/reducers/root";
+import { connect } from "react-redux";
+import { NameSpace } from "../../store/reducers/root";
+import {getFlightsForInterval} from "../../store/selectors";
+
+const mapFlightParam = {
+  dateFlight: "Дата",
+  flight: "Номер рейса",
+  pln: "Бортовой номер ВС",
+  plnType: "Тип ВС",
+  from: "Аэродром взлета",
+  fromLat: "Аэродром взлёта - долгота",
+  fromLong: "Аэродром взлёта - широта",
+  to: "Аэродром посадки",
+  toLat: "Аэродром посадки - долгота",
+  toLong: "Аэродром посадки - широта",
+  timeFlight: "Время налёта",
+  timeBlock: "Полётное время",
+  timeNight: "Ночное лётное время",
+  timeBiologicalNight: "Биологическая ночь",
+  timeWork: "Рабочее время",
+  type: "Тип налёта",
+};
 
 const useStyles = makeStyles({
   root: {
@@ -31,7 +51,7 @@ const useStyles = makeStyles({
   td: {
     color: "#676565",
     fontWeight: 400,
-  }
+  },
 });
 
 const createData = (flightData) => {
@@ -41,6 +61,7 @@ const createData = (flightData) => {
     takeoff,
     landing,
     pln,
+    plnType,
     timeFlight,
     timeBlock,
     timeNight,
@@ -50,34 +71,28 @@ const createData = (flightData) => {
   } = flightData;
   return {
     dateFlight: dateFlight.toLocaleString(),
-    takeoff: takeoff.name,
-    landing: landing.name,
     flight: flight,
-    details: [
-      {
-        date: dateFlight,
-        from: takeoff.name,
-        fromLat: takeoff.lat,
-        fromLong: takeoff.long,
-        to: landing.name,
-        toLat: landing.lat,
-        toLong: landing.long,
-        plaine: pln,
-        timeFlight,
-        timeBlock,
-        timeNight,
-        timeBiologicalNight,
-        timeWork,
-        type,
-      },
-    ],
+    pln: pln,
+    plnType: plnType,
+    from: takeoff.name,
+    fromLat: takeoff.lat,
+    fromLong: takeoff.long,
+    to: landing.name,
+    toLat: landing.lat,
+    toLong: landing.long,
+    timeFlight,
+    timeBlock,
+    timeNight,
+    timeBiologicalNight,
+    timeWork,
+    type: type ? "Плановый" : "Фактический",
   };
 };
 
-const Row = (props) => {
-  const { row } = props;
+const Row = ({ row }) => {
   const [open, setOpen] = React.useState(false);
   const classes = useStyles();
+  const rowKeys = Object.keys(row);
 
   return (
     <React.Fragment>
@@ -94,9 +109,15 @@ const Row = (props) => {
         <TableCell component="th" scope="row" className={classes.th}>
           {row.flight}
         </TableCell>
-        <TableCell className={classes.td} align="right">{row.dateFlight}</TableCell>
-        <TableCell className={classes.td} align="right">{row.takeoff}</TableCell>
-        <TableCell className={classes.td} align="right">{row.landing}</TableCell>
+        <TableCell className={classes.td} align="right">
+          {row.dateFlight}
+        </TableCell>
+        <TableCell className={classes.td} align="right">
+          {row.from}
+        </TableCell>
+        <TableCell className={classes.td} align="right">
+          {row.to}
+        </TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -106,26 +127,24 @@ const Row = (props) => {
                 Детали полета
               </Typography>
               <Table size="small" aria-label="purchases">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Дата</TableCell>
-                    <TableCell>АЭР ВЗЛ</TableCell>
-                    <TableCell>АЭР ВЗЛ ШИРОТА</TableCell>
-                    <TableCell>АЭР ВЗЛ ДОЛГОТА</TableCell>
-                    <TableCell>АЭР ПОС</TableCell>
-                    <TableCell>Аэродром посадки</TableCell>
-                    <TableCell align="right">Amount</TableCell>
-                    <TableCell align="right">Total price ($)</TableCell>
-                  </TableRow>
-                </TableHead>
                 <TableBody>
-                  {row.details.map((detailsRow) => (
-                    <TableRow key={detailsRow.date}>
-                      <TableCell component="th" scope="row">
-                        {detailsRow.date}
+                  {rowKeys.map((key) => (
+                    <TableRow key={key} className={classes.row}>
+                      <TableCell
+                        component="th"
+                        variant="head"
+                        className={classes.th}
+                      >
+                        {mapFlightParam[key]}
                       </TableCell>
-                      <TableCell>{detailsRow.from}</TableCell>
-                      <TableCell align="right">{detailsRow.to}</TableCell>
+
+                      <TableCell
+                        variant="body"
+                        className={classes.td}
+                        align="right"
+                      >
+                        {row[key]}
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -136,18 +155,12 @@ const Row = (props) => {
       </TableRow>
     </React.Fragment>
   );
-}
+};
 
-
-
-
-const CollapsibleTable = ({flights}) => {
+const CollapsibleTable = ({ flights }) => {
+  console.log(flights);
   const classes = useStyles();
-  const generateRows = (flights) => {
-    return flights.map((flight) => {
-      return createData(flight);
-    });
-  };
+  const generateRows = (flights) => flights.map((flight) => createData(flight));
 
   const rows = generateRows(flights);
 
@@ -158,9 +171,15 @@ const CollapsibleTable = ({flights}) => {
           <TableRow>
             <TableCell />
             <TableCell className={classes.th}>Номер рейса</TableCell>
-            <TableCell className={classes.th} align="right">Дата рейса</TableCell>
-            <TableCell className={classes.th} align="right">Откуда</TableCell>
-            <TableCell className={classes.th} align="right">Куда</TableCell>
+            <TableCell className={classes.th} align="right">
+              Дата рейса
+            </TableCell>
+            <TableCell className={classes.th} align="right">
+              Откуда
+            </TableCell>
+            <TableCell className={classes.th} align="right">
+              Куда
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -173,8 +192,4 @@ const CollapsibleTable = ({flights}) => {
   );
 };
 
-const mapStateToProps = (state) => ({
-  flights: state[NameSpace.FLIGHTS].flights
-});
-
-export default connect(mapStateToProps)(CollapsibleTable);
+export default CollapsibleTable;

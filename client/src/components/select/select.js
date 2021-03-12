@@ -72,7 +72,7 @@ SimpleSelect.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  filter: state[NameSpace.STATISTIC].filter,
+  filter: state[NameSpace.FLIGHTS].filter,
   years: getYears(state),
 });
 

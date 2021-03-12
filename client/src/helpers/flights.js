@@ -35,7 +35,7 @@ const findNextFlight = (flights) => {
 export const getNextFlight = (flights) => {
   const filteredPlannedFlights = filterByPlanned(flights);
   if (!filteredPlannedFlights.length) {
-    return filteredPlannedFlights;
+    return "not found";
   }
   const nextFlight = findNextFlight(filteredPlannedFlights);
   return nextFlight;

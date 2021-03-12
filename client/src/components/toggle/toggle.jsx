@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { Switch, Typography, Grid, Container } from "@material-ui/core";
+import { Switch, Typography, Grid, Container, useMediaQuery } from "@material-ui/core";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles({
@@ -28,6 +28,8 @@ const BlueSwitch = withStyles({
 
 const Toggle = ({ changeHandler, labels }) => {
   const classes = useStyles();
+  const matches = useMediaQuery(`(min-width: 600px)`);
+
   const [leftLabel, rightLabel] = labels;
 
   const [state, setState] = useState({
@@ -51,7 +53,7 @@ const Toggle = ({ changeHandler, labels }) => {
           <Typography
             className={classes.labelFont}
             style={
-              !state.checkedA
+              !state.checkedA && !matches
                 ? { border: "2px solid #4e85f5", padding: "3px" }
                 : {}
             }
@@ -73,7 +75,7 @@ const Toggle = ({ changeHandler, labels }) => {
           <Typography
             className={classes.labelFont}
             style={
-              state.checkedA
+              state.checkedA && !matches
                 ? { border: "2px solid #4e85f5", padding: "3px" }
                 : {}
             }

@@ -1,12 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {
-  Container,
-  Box,
-  Typography,
-  useMediaQuery,
-  Grid,
-} from "@material-ui/core";
+import { Container, Box, Typography, useMediaQuery } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import { NameSpace } from "../../store/reducers/root";
@@ -97,7 +91,7 @@ const DetailsPage = ({ statsByInterval, flightsForInterval }) => {
 
 DetailsPage.propTypes = {
   statsByInterval: PropTypes.object.isRequired,
-  flightsForInterval: PropTypes.array.isRequired,
+  flightsForInterval: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({

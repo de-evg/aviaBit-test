@@ -36,7 +36,7 @@ const SimpleSelect = ({ filter, setFilter, years }) => {
   const classes = useStyles();
 
   const handleChange = (evt) => {
-    setFilter(evt.target.value);
+    setFilter(+evt.target.value);
   };
   if (filter === undefined) {
     debugger;
@@ -66,13 +66,13 @@ const SimpleSelect = ({ filter, setFilter, years }) => {
 };
 
 SimpleSelect.propTypes = {
-  filter: PropTypes.string.isRequired,
+  filter: PropTypes.number.isRequired,
   setFilter: PropTypes.func.isRequired,
   years: PropTypes.array.isRequired
 };
 
 const mapStateToProps = (state) => ({
-  filter: state[NameSpace.FLIGHTS].filter,
+  filter: state[NameSpace.STATISTIC].filter,
   years: getYears(state),
 });
 

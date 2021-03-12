@@ -15,7 +15,7 @@ const SimpleBreadcrumbs = ({currentRoute}) => {
   return (
     <Breadcrumbs aria-label="breadcrumb">
       {currentRoute === AppRoute.DETAILS && (
-        <Link color="#000" href="/" onClick={handleClick}>
+        <Link color="initial" href="/" onClick={handleClick}>
           На главную
         </Link>
       )}

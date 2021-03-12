@@ -85,64 +85,64 @@ const MainPage = ({ noNextFlight }) => {
           style={matches ? { height: "593px" } : null}
         >
           <Grid
+            item
+            container
             className={classes.gridItem}
             style={
               matches
                 ? {
-                    width: "474px",
+                    flexDirection: "row",
                     borderBottom: "1px solid rgba(16, 66, 195, 0.15)",
                   }
                 : null
             }
           >
-            <User />
-          </Grid>
-          <Grid
-            className={classes.gridItem}
-            style={matches ? { width: "50%", padding: "29px 0 33px 0" } : null}
-          >
-            {noNextFlight ? <NoPlannedFlights /> : <NextFlight />}
-          </Grid>
-          {matches ? (
+            <Grid item style={{ width: "50%" }}>
+              <User />
+            </Grid>
             <Grid
               item
               container
-              className={classes.gridItem}
-              style={
-                matches
-                  ? {
-                      width: "50%",
-                      padding: "50px 0 42px 0",
-                      borderBottom: "1px solid rgba(16, 66, 195, 0.15)",
-                      justifyContent: "flex-end",
-                    }
-                  : null
-              }
+              direction="column"
+              alignItems="flex-end"
+              justify="center"
+              style={{ width: "50%" }}
             >
               <ShowMoreBtn clickHandler={handleShowChartBtnClick} />
             </Grid>
-          ) : (
-            <AccordionContainer
-              style={{ width: "350px" }}
-              renderDetails={() => <FlightStatistic />}
-            >
-              Статистика налёта
-            </AccordionContainer>
-          )}
-          {isChartShowed ? (
+          </Grid>
+          <Grid container justify="space-between" style={{paddingTop: "20px"}}>
             <Grid
-              item
+              className={classes.gridItem}
               style={
-                matches
-                  ? {
-                      width: "50%",
-                    }
-                  : null
+                matches ? { width: "50%", padding: "29px 0 33px 0" } : null
               }
             >
-              <Chart />
+              {noNextFlight ? <NoPlannedFlights /> : <NextFlight />}
             </Grid>
-          ) : null}
+            {matches ? null : (
+              <AccordionContainer
+                style={{ width: "350px" }}
+                renderDetails={() => <FlightStatistic />}
+              >
+                Статистика налёта
+              </AccordionContainer>
+            )}
+            {isChartShowed ? (
+              <Grid
+                item
+                style={
+                  matches
+                    ? {
+                        width: "50%",
+                      }
+                    : null
+                }
+              >
+                <Chart />
+              </Grid>
+            ) : null}
+          </Grid>
         </Grid>
       </Box>
     </>

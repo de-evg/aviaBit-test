@@ -20,7 +20,7 @@ const findNextFlight = (flights) => {
   while (!dayX) {
     month = currentDate.getMonth() + 1;
     if (month === NEXT_YEAR) {
-      dayX = "not fined"
+      dayX = "not found"
       break;
     }
     dayX = flightsByMonths[months[month]]

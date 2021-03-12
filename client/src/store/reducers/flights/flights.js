@@ -24,7 +24,7 @@ export const flightsData = (state = initialState, action) => {
       return { ...state, flights: apdaptedFlights, isFlightsLoaded: true };
     case ActionType.SEARCH_NEXT_FLIGHT:
       const nextFlight = getNextFlight(state.flights);
-      if (!nextFlight.length) {
+      if (nextFlight === "not found") {
         return {
           ...state,
           nextFlight: {

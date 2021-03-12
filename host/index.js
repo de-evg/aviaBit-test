@@ -1,5 +1,4 @@
 const express = require("express");
-// var cors = require("cors");
 const path = require("path");
 const port = process.env.PORT || 8080;
 const app = express();
@@ -7,11 +6,6 @@ const fs = require("fs");
 fs.readFile("data.json", "utf8", (error) => {
   if (error) throw error;
 });
-
-// const corsOptions = {
-//   origin: "http://127.0.0.1:3000",
-//   optionsSuccessStatus: 200,
-// };
 
 let jsonFile = fs.readFileSync("data.json", "utf8");
 

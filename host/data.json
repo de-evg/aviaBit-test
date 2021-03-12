@@ -6675,7 +6675,7 @@
     "timeNight": 0,
     "timeBiologicalNight": 0,
     "timeWork": 38580,
-    "type": 0,
+    "type": 1,
     "takeoff": {
       "name": "Пунта Кана",
       "lat": 18.56666666,

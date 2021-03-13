@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from 'prop-types';
-import { Button, useMediaQuery } from "@material-ui/core";
+import { Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles({
@@ -15,8 +15,8 @@ const useStyles = makeStyles({
 
 const Btn = ({clickHandler, children}) => {
   const classes = useStyles();
-  const matches = useMediaQuery(`(min-width: 600px)`);
-  return <Button onClick={clickHandler} variant="contained" className={classes.button} style={matches ? null : {width: "100%"}}>{children}</Button>;
+  
+  return <Button onClick={clickHandler} variant="contained" className={classes.button}>{children}</Button>;
 };
 
 Btn.propTypes = {

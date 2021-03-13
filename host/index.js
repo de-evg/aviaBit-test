@@ -15,7 +15,7 @@ app.get("/flights", (req, res) => {
   return res.send(jsonFile);
 });
 
-const server = app.listen(port, "127.0.0.1", (error) => {
+const server = app.listen(port, (error) => {
   if (error) return console.log(`Error: ${error}`);
   const host = server.address().address;
   const port = server.address().port;

@@ -1,5 +1,6 @@
 import React, { useCallback, useState, useEffect } from "react";
 import PropTypes from "prop-types";
+import {useMediaQuery} from "@material-ui/core";
 import { connect } from "react-redux";
 import {
   BarChart,
@@ -9,6 +10,7 @@ import {
   CartesianGrid,
   Legend,
   ResponsiveContainer,
+  Tooltip
 } from "recharts";
 
 import { getChartData } from "../../store/selectors";
@@ -21,9 +23,18 @@ import {useHistory} from "react-router";
 
 const times = ["Время работы", "Время налёта"];
 const intervals = ["Годы", "Месяцы"];
+const initialBarStyle = {
+  barActual: {
+    fill: "rgba(78, 133, 245, 1)"
+  } ,
+  barPlanned: {
+    fill: "rgba(78, 133, 245, 0.6)"
+  }
+};
 
 const Chart = ({ chartData, toggleStatisticType }) => {
   let history = useHistory();
+  const matches = useMediaQuery(`(min-width: 600px)`);
 
   const [isTimeToggled, setTimeToggle] = useState(false);
   const [isStatisticTypeToggled, setStatisticToggle] = useState(false);
@@ -49,6 +60,10 @@ const Chart = ({ chartData, toggleStatisticType }) => {
     history.push(`${AppRoute.DETAILS}/${evt.payload.interval}`);
     window.scrollTo(0, 0);
   }, [history]);
+
+  const handleBarHover = useCallback((evt) => {
+    console.log(evt);
+  }, []);
 
   return (
     <Grid container>
@@ -86,20 +101,22 @@ const Chart = ({ chartData, toggleStatisticType }) => {
               />
               <XAxis dataKey="name" />
               <YAxis />
-
+              {matches && <Tooltip cursor={{ fill: "#f1f1f1"}}  />}
               {isTimeToggled && (
                 <Bar
                   onClick={handleBarClick}
+                  onMouseOver={handleBarHover}
                   barSize={10}
                   dataKey="actualTimeFlight"
                   name="Фактическое время налета"
                   stackId="a"
-                  fill="rgb(78, 133, 245)"
+                  fill="rgba(78, 133, 245, 1)"
                 />
               )}
               {isTimeToggled && (
                 <Bar
                   onClick={handleBarClick}
+                  onMouseOver={handleBarHover}
                   barSize={10}
                   dataKey="plannedTimeFlight"
                   name="Плановое время налета"
@@ -110,16 +127,18 @@ const Chart = ({ chartData, toggleStatisticType }) => {
               {!isTimeToggled && (
                 <Bar
                   onClick={handleBarClick}
+                  onMouseOver={handleBarHover}
                   barSize={10}
                   dataKey="actualTimeWork"
                   name="Фактическое время работы"
                   stackId="a"
-                  fill="rgb(78, 133, 245)"
+                  fill="rgba(78, 133, 245, 1)"
                 />
               )}
               {!isTimeToggled && (
                 <Bar
                   onClick={handleBarClick}
+                  onMouseOver={handleBarHover}
                   barSize={10}
                   dataKey="plannedTimeWork"
                   name="Плановое время работы"

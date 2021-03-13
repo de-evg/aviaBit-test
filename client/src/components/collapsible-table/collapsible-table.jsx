@@ -1,14 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Row from "../collapsible-table-row/collabsible-table-row";
-import { makeStyles } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
+import {makeStyles} from "@material-ui/core/styles";
+import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography} from "@material-ui/core";
 
 const useStyles = makeStyles({
   root: {
@@ -17,6 +11,7 @@ const useStyles = makeStyles({
     },
   },
   th: {
+    minWidth: "80px",
     fontSize: "0.7rem",
     color: "#000000",
     fontWeight: 700,
@@ -25,6 +20,9 @@ const useStyles = makeStyles({
     color: "#676565",
     fontWeight: 400,
   },
+  title: {
+    marginBottom: "5px"
+  }
 });
 
 const createData = (flightData) => {
@@ -62,36 +60,47 @@ const createData = (flightData) => {
   };
 };
 
-const CollapsibleTable = ({ flights }) => {
+const CollapsibleTable = ({flights}) => {
   const classes = useStyles();
   const generateRows = (flights) => flights.map((flight) => createData(flight));
   const rows = generateRows(flights);
 
   return (
-    <TableContainer component={Paper}>
-      <Table aria-label="collapsible table">
-        <TableHead>
-          <TableRow>
-            <TableCell />
-            <TableCell className={classes.th}>Номер рейса</TableCell>
-            <TableCell className={classes.th} align="right">
-              Дата рейса
+    <>
+      <Typography
+        className={classes.title}
+        variant="h6"
+        color={"textSecondary"}
+        id="tableTitle"
+        component="h3"
+      >
+        Полёты
+      </Typography>
+      <TableContainer component={Paper}>
+        <Table aria-label="collapsible table">
+          <TableHead>
+            <TableRow>
+              <TableCell />
+              <TableCell className={classes.th}>№ рейса</TableCell>
+              <TableCell className={classes.th} align="right">
+                Дата рейса
             </TableCell>
-            <TableCell className={classes.th} align="right">
-              Откуда
+              <TableCell className={classes.th} align="right">
+                Откуда
             </TableCell>
-            <TableCell className={classes.th} align="right">
-              Куда
+              <TableCell className={classes.th} align="right">
+                Куда
             </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map((row, i) => (
-            <Row key={`${row.name}-${i}`} row={row} />
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {rows.map((row, i) => (
+              <Row key={`${row.name}-${i}`} row={row} />
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </>
   );
 };
 

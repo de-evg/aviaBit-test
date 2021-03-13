@@ -3,7 +3,7 @@ export const ActionType = {
   CHANGE_STATISTIC_TYPE: "CHANGE_STATISTIC_TYPE",
   CHANGE_FILTER: "CHANGE_FILTER",
   SEARCH_NEXT_FLIGHT: "SEARCH_NEXT_FLIGHT",
-  CHANGE_INTERVAL: "CHANGE_INTERVAL"
+  CHANGE_STATS: "CHANGE_STATS"
 };
 
 export const ActionCreator = {
@@ -22,8 +22,8 @@ export const ActionCreator = {
   setNextFlight: () => ({
     type: "SEARCH_NEXT_FLIGHT",
   }),
-  setDetailsInterval: (interval) => ({
-    type: "CHANGE_INTERVAL",
-    payload: interval
+  setDetailsInterval: (stats) => ({
+    type: "CHANGE_STATS",
+    payload: stats
   })
 };

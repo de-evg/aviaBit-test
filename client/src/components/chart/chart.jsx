@@ -47,7 +47,8 @@ const Chart = ({ chartData, toggleStatisticType, updateDetailsInterval }) => {
 
   const handleBarClick = useCallback((evt) => {
     updateDetailsInterval(evt.payload);
-    history.push(AppRoute.DETAILS);
+    history.push(`${AppRoute.DETAILS}/${evt.payload.interval}`);
+    window.scrollTo(0, 0);
   }, [updateDetailsInterval, history]);
 
   return (

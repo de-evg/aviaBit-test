@@ -5,47 +5,35 @@ import {
   TableRow,
   TableCell,
   Typography,
+  TableContainer,
+  Paper
 } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import {makeStyles} from "@material-ui/core/styles";
 
 const useStyles = makeStyles({
-  grid: {
-    width: "100%",
-    borderBottom: "1px solid rgba(16, 66, 195, 0.15)",
-    paddingBottom: "24px",
-  },
-  card: {
-    boxShadow: "none",
-  },
-  media: {
-    maxWidth: "257px",
-    marginBottom: "15px",
-    backgroundSize: "contain",
-  },
   row: {
     display: "flex",
+    width: "100%",
     justifyContent: "space-between",
-    marginBottom: "0",
   },
   th: {
     border: "none",
-    paddingLeft: 0,
-    paddingTop: "0px",
-    paddingBottom: "0px",
+    padding: "10px",
     color: "#000000",
-    fontWeight: 700,
+    fontWeight: 700
   },
   td: {
     border: "none",
-    paddingRight: 0,
-    paddingTop: "0px",
-    paddingBottom: "0px",
+    padding: "10px",    
     color: "#676565",
     fontWeight: 400,
   },
+  title: {
+    marginBottom: "5px"
+  }
 });
 
-const DetailsTable = ({ rows, title }) => {
+const DetailsTable = ({rows, title}) => {
   const classes = useStyles();
 
   return (
@@ -53,26 +41,29 @@ const DetailsTable = ({ rows, title }) => {
       <Typography
         className={classes.title}
         variant="h6"
+        color={"textSecondary"}
         id="tableTitle"
-        component="div"
+        component="h3"
       >
         {title}
       </Typography>
-      <Table>
-        <TableBody>
-          {rows.map((row) => (
-            <TableRow key={row.name} className={classes.row}>
-              <TableCell component="th" variant="head" className={classes.th}>
-                {row.name}
-              </TableCell>
+      <TableContainer component={Paper} style={{width: "100%"}}>
+        <Table>
+          <TableBody>
+            {rows.map((row) => (
+              <TableRow key={row.name} className={classes.row}>
+                <TableCell component="th" variant="head" className={classes.th}>
+                  {row.name}
+                </TableCell>
 
-              <TableCell variant="body" className={classes.td} align="right">
-                {row.data}
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+                <TableCell variant="body" className={classes.td} align="right">
+                  {row.data}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </>
   );
 };

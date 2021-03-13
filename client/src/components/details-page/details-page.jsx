@@ -1,17 +1,19 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import PropTypes from "prop-types";
-import { Container, Box, Typography, useMediaQuery } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import { connect } from "react-redux";
-import { NameSpace } from "../../store/reducers/root";
+import {Container, Box, useMediaQuery, Grid} from "@material-ui/core";
+import {makeStyles} from "@material-ui/core/styles";
+import {connect} from "react-redux";
+import {NameSpace} from "../../store/reducers/root";
 import DetailsTable from "../details-table/details-table";
 import CollapsibleTable from "../collapsible-table/collapsible-table";
-import { getFlightsForInterval } from "../../store/selectors";
-import SimpleBreadcrumbs from "../simple-breadcrumbs/simple-breadcrumbs";
-import { AppRoute } from "../../const";
+import BtnBack from "../btn-back/btn-back";
+import {AppRoute, months, StatisticType} from "../../const";
+import {ActionCreator} from "../../store/action";
+import {generateChartData, getGroupedData} from "../../helpers/statistic";
+import PageHeader from "../page-header/page-header";
 
 const createData = (name, data) => {
-  return { name, data };
+  return {name, data};
 };
 
 const useStyles = makeStyles({
@@ -20,7 +22,7 @@ const useStyles = makeStyles({
     padding: "28px 0 8px 20px",
   },
   main: {
-    padding: "15px 20px 13px 20px",
+    padding: "0 20px 13px 20px",
   },
   title: {
     fontWeight: 700,
@@ -31,11 +33,11 @@ const useStyles = makeStyles({
     wrap: "wrap",
   },
   gridItem: {
-    width: "100%",
+    marginBottom: "15px",
   },
 });
 
-const DetailsPage = ({ statsByInterval, flightsForInterval }) => {
+const DetailsPage = ({statsByInterval, flights, updateStatsInterval, match: {params: {id}}}) => {
   const classes = useStyles();
   const matches = useMediaQuery(`(min-width: 600px)`);
   const {
@@ -51,6 +53,14 @@ const DetailsPage = ({ statsByInterval, flightsForInterval }) => {
     plannedTimeWork,
     interval,
   } = statsByInterval;
+
+  const [flightsForInterval, setFlightsForInterval] = useState({});
+  const [statisticType, setStatisticType] = useState("");
+
+  useEffect(() => {
+    const statisticType = id.length === 4 ? StatisticType.YEARS : StatisticType.MONTHS;
+    setStatisticType(statisticType);
+  }, [id]);
 
   const actualDataRows = [
     createData("Общее время налёта", actualTimeFlight),
@@ -68,35 +78,73 @@ const DetailsPage = ({ statsByInterval, flightsForInterval }) => {
     createData("Общее рабочее время", plannedTimeWork),
   ];
 
+  useEffect(() => {
+    if (!Object.keys(flightsForInterval).length && statisticType) {
+      const interval = statisticType === StatisticType.YEARS ? id : id.slice(-4);
+      const groupedData = getGroupedData(flights, statisticType, interval);
+      setFlightsForInterval(groupedData);
+    }
+  }, [flightsForInterval, flights, statisticType, id]);
+
+  useEffect(() => {
+    if (!!Object.keys(flightsForInterval).length) {
+      const interval = statisticType === StatisticType.YEARS ? id : id.slice(0, 3);
+      const index = statisticType === StatisticType.MONTHS ? months.findIndex((month) => month === interval) : 0;
+      const statsByInterval = generateChartData(flightsForInterval[interval], statisticType, id.slice(-4))[index];
+      updateStatsInterval(statsByInterval);
+    }
+  }, [flightsForInterval, updateStatsInterval, statisticType, id]);
+
   return (
-    <Container maxWidth={matches ? "md" : "xs"}>
-      <Box my={8} pl={10}>
-        <SimpleBreadcrumbs currentRoute={AppRoute.DETAILS} />
+    <>
+      <PageHeader>{`Статистика за ${interval}`}</PageHeader>
+      <Box my={10} px={10}>
+        <BtnBack />
       </Box>
-      <Box my={4} textAlign="center" className={classes.main}>
-        <Typography variant={matches ? "h4" : "h5"} component="h2" gutterBottom>
-          {`Статистика за ${interval}`}
-        </Typography>
-        <Container maxWidth={matches ? "sm" : "xs"}>
-          <Box my={10}>
-            <DetailsTable title={"Фактическое время"} rows={actualDataRows} />
-            <DetailsTable title={"Плановое время"} rows={plannedDataRows} />
-          </Box>
-        </Container>
-        <CollapsibleTable flights={flightsForInterval[statsByInterval.name]} />
+      <Box
+        className={classes.main}
+        style={matches ? {padding: "0 17%"} : null}
+      >
+        <Grid container justify="center" style={{width: "100%"}}>
+          <Grid item style={{marginBottom: "15px", width: "inherit"}}>
+            <Container maxWidth={matches ? "xl" : "xs"} style={{padding: "0", width: "100%"}}>
+              <Grid container direction={matches ? "row" : "column"} justify="space-between" wrap="wrap" style={{padding: "0", width: "100%"}}>
+                <Grid className={classes.gridItem} container item direction="column" style={matches ? {padding: "0", width: "45%"} : null}>
+                  <DetailsTable title={"Фактическое время"} rows={actualDataRows} style={{minWidth: "100%"}} />
+                </Grid>
+                <Grid container item direction="column" style={matches ? {padding: "0", width: "45%"} : null}>
+                  <DetailsTable title={"Плановое время"} rows={plannedDataRows} style={{minWidth: "100%"}} />
+                </Grid>
+              </Grid>
+            </Container>
+          </Grid>
+          <Container maxWidth={matches ? "xl" : "xs"} style={{padding: "0", width: "100%"}}>
+            {
+              !!Object.keys(flightsForInterval).length && statsByInterval.name && <CollapsibleTable flights={flightsForInterval[statsByInterval.name]} />
+            }
+
+            </Container>
+        </Grid>
+
       </Box>
-    </Container>
+    </>
   );
 };
 
 DetailsPage.propTypes = {
   statsByInterval: PropTypes.object.isRequired,
-  flightsForInterval: PropTypes.object.isRequired,
+  flights: PropTypes.array.isRequired,
+  updateStatsInterval: PropTypes.func.isRequired
 };
 
 const mapStateToProps = (state) => ({
   statsByInterval: state[NameSpace.STATISTIC].statsByInterval,
-  flightsForInterval: getFlightsForInterval(state),
+  flights: state[NameSpace.FLIGHTS].flights
 });
 
-export default connect(mapStateToProps)(DetailsPage);
+const mapDispatchToProps = (dispatch) => ({
+  updateStatsInterval(stats) {
+    dispatch(ActionCreator.setDetailsInterval(stats));
+  },
+});
+export default connect(mapStateToProps, mapDispatchToProps)(DetailsPage);

@@ -3,6 +3,10 @@ export const AppRoute = {
   DETAILS: "/details",
 };
 
+export const APIRoute = {
+  FETCH_FLIGHTS: "/flights"
+};
+
 export const StatisticType = {
   YEARS: "YEARS",
   MONTHS: "MONTHS",
@@ -22,7 +26,3 @@ export const months = [
   "NOV",
   "DEC",
 ];
-
-export const APIRoute = {
-  FETCH_FLIGHTS: "/flights"
-};

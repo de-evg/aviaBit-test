@@ -34,7 +34,7 @@ const useStyles = makeStyles({
   row: {
     display: "flex",
     justifyContent: "space-between",
-    marginBottom: "13px",
+    marginBottom: "9px",
   },
   th: {
     border: "none",

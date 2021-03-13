@@ -57,7 +57,7 @@ const App = () => {
             path={AppRoute.MAIN}
             render={(props) => <MainPage history={props.history} />}
           ></Route>
-          <Route exact path={AppRoute.DETAILS} render={() => <DetailsPage />} />
+          <Route exact path={`${AppRoute.DETAILS}/:id`} render={(props) => <DetailsPage match={props.match} />} />
         </Switch>
       </BrowserRouter>
     </ThemeProvider>

@@ -1,8 +1,6 @@
 import React, {useCallback, useState} from "react";
 import {
-  Container,
   Box,
-  Typography,
   useMediaQuery,
   Grid,
 } from "@material-ui/core";
@@ -11,19 +9,14 @@ import User from "../user/user";
 import NextFlight from "../next-flight/next-flight";
 import AccordionContainer from "../accordion-container/accordion-container";
 import FlightStatistic from "../flight-statistic/flight-statistic";
-import ShowMoreBtn from "../show-chart-btn/show-chart-btn";
+import Btn from "../btn/btn";
 import Chart from "../chart/chart";
-import SimpleBreadcrumbs from "../simple-breadcrumbs/simple-breadcrumbs";
-import {AppRoute} from "../../const";
 import {connect} from "react-redux";
 import {NameSpace} from "../../store/reducers/root";
 import NoPlannedFlights from "../no-planned-flights/no-planned-flights";
+import PageHeader from "../page-header/page-header";
 
 const useStyles = makeStyles({
-  header: {
-    backgroundColor: "#4e85f5",
-    padding: "28px 0 8px 20px",
-  },
   main: {
     padding: "15px 20px 13px 20px",
   },
@@ -51,30 +44,7 @@ const MainPage = ({noNextFlight}) => {
 
   return (
     <>
-      <Box
-        className={classes.header}
-        style={
-          matches
-            ? {background: "url(./img/wing.png)", padding: "50px 0 40px 0"}
-            : null
-        }
-      >
-        <SimpleBreadcrumbs currentRoute={AppRoute.MAIN} />
-        <Container
-          maxWidth={matches ? "xl" : "xs"}
-          style={matches ? {padding: "0 17%"} : null}
-        >
-          <Typography
-            className={classes.title}
-            color={matches ? "textSecondary" : "textPrimary"}
-            variant={matches ? "h4" : "h5"}
-            component="h1"
-            gutterBottom
-          >
-            Профиль
-          </Typography>
-        </Container>
-      </Box>
+      <PageHeader>Профиль</PageHeader>
       <Box
         className={classes.main}
         style={matches ? {padding: "0 17%"} : null}
@@ -108,7 +78,7 @@ const MainPage = ({noNextFlight}) => {
               justify="center"
               style={{width: "50%"}}
             >
-              {matches && <ShowMoreBtn clickHandler={handleShowChartBtnClick} />}
+              {matches && <Btn clickHandler={handleShowChartBtnClick}>Статистика налёта</Btn>}
             </Grid>
           </Grid>
           <Grid container justify="space-between" style={{paddingTop: "20px"}}>

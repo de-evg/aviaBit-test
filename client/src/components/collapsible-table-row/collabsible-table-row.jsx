@@ -8,7 +8,6 @@ import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
-import Typography from "@material-ui/core/Typography";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 
@@ -38,6 +37,7 @@ const useStyles = makeStyles({
     },
   },
   th: {
+    minWidth: "80px",
     fontSize: "0.7rem",
     color: "#000000",
     fontWeight: 700,
@@ -81,10 +81,7 @@ const Row = ({ row }) => {
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box margin={1}>
-              <Typography variant="h6" gutterBottom component="div">
-                Детали полета
-              </Typography>
+            <Box margin={1}>              
               <Table size="small" aria-label="purchases">
                 <TableBody>
                   {rowKeys.map((key) => (

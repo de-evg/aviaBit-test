@@ -26,7 +26,7 @@ export const statisticData = (state = initialState, action) => {
       return { ...state, statisticType: action.payload };
     case ActionType.CHANGE_FILTER:
       return { ...state, filter: action.payload };
-    case ActionType.CHANGE_INTERVAL:
+    case ActionType.CHANGE_STATS:
       return { ...state, statsByInterval: action.payload };
 
     default:

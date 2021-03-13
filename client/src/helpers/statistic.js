@@ -163,3 +163,24 @@ export const getAllData = (actualChartData, plannedChartData) => {
   }, []);
   return allData;
 };
+
+export const generateChartData = (flights, statisticType, filter) => {
+  const filteredActualFlights = filterByActual(flights);
+    const filteredPlannedFlights = filterByPlanned(flights);
+    const actualFlights = getGroupedData(
+      filteredActualFlights,
+      statisticType,
+      filter
+    );
+    const plannedFlights = getGroupedData(
+      filteredPlannedFlights,
+      statisticType,
+      filter
+    );
+
+    const actualChartData = convertToChartData(actualFlights, statisticType, filter);
+    const plannedChartData = convertToChartData(plannedFlights, statisticType, filter);
+
+    const allData = getAllData(actualChartData, plannedChartData) || [];
+    return allData;
+};

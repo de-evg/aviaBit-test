@@ -15,7 +15,6 @@ const useStyles = makeStyles({
 
 const Btn = ({clickHandler, children}) => {
   const classes = useStyles();
-  
   return <Button onClick={clickHandler} variant="contained" className={classes.button}>{children}</Button>;
 };
 

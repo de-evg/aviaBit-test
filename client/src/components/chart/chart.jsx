@@ -22,7 +22,7 @@ import {useHistory} from "react-router";
 const times = ["Время работы", "Время налёта"];
 const intervals = ["Годы", "Месяцы"];
 
-const Chart = ({ chartData, toggleStatisticType, updateDetailsInterval }) => {
+const Chart = ({ chartData, toggleStatisticType }) => {
   let history = useHistory();
 
   const [isTimeToggled, setTimeToggle] = useState(false);
@@ -46,10 +46,9 @@ const Chart = ({ chartData, toggleStatisticType, updateDetailsInterval }) => {
   }, [isStatisticTypeToggled, toggleStatisticType]);
 
   const handleBarClick = useCallback((evt) => {
-    updateDetailsInterval(evt.payload);
     history.push(`${AppRoute.DETAILS}/${evt.payload.interval}`);
     window.scrollTo(0, 0);
-  }, [updateDetailsInterval, history]);
+  }, [history]);
 
   return (
     <Grid container>
@@ -138,8 +137,7 @@ const Chart = ({ chartData, toggleStatisticType, updateDetailsInterval }) => {
 
 Chart.propTypes = {
   chartData: PropTypes.array.isRequired,
-  toggleStatisticType: PropTypes.func.isRequired,
-  updateDetailsInterval: PropTypes.func.isRequired
+  toggleStatisticType: PropTypes.func.isRequired
 };
 
 const mapStateToProps = (state) => ({
@@ -149,10 +147,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   toggleStatisticType(type) {
     dispatch(ActionCreator.changeStatisticType(type));
-  },
-  updateDetailsInterval(interval) {
-    dispatch(ActionCreator.setDetailsInterval(interval));
-  },
+  }
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Chart);

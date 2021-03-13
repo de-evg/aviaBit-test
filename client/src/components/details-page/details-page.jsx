@@ -7,7 +7,7 @@ import {NameSpace} from "../../store/reducers/root";
 import DetailsTable from "../details-table/details-table";
 import CollapsibleTable from "../collapsible-table/collapsible-table";
 import BtnBack from "../btn-back/btn-back";
-import {AppRoute, months, StatisticType} from "../../const";
+import {months, StatisticType} from "../../const";
 import {ActionCreator} from "../../store/action";
 import {generateChartData, getGroupedData} from "../../helpers/statistic";
 import PageHeader from "../page-header/page-header";
@@ -37,7 +37,7 @@ const useStyles = makeStyles({
   },
 });
 
-const DetailsPage = ({statsByInterval, flights, updateStatsInterval, match: {params: {id}}}) => {
+const DetailsPage = ({isFlightsLoaded, statsByInterval, flights, updateStatsInterval, match: {params: {id}}}) => {
   const classes = useStyles();
   const matches = useMediaQuery(`(min-width: 600px)`);
   const {
@@ -79,12 +79,12 @@ const DetailsPage = ({statsByInterval, flights, updateStatsInterval, match: {par
   ];
 
   useEffect(() => {
-    if (!Object.keys(flightsForInterval).length && statisticType) {
+    if (!Object.keys(flightsForInterval).length && statisticType && isFlightsLoaded) {
       const interval = statisticType === StatisticType.YEARS ? id : id.slice(-4);
       const groupedData = getGroupedData(flights, statisticType, interval);
       setFlightsForInterval(groupedData);
     }
-  }, [flightsForInterval, flights, statisticType, id]);
+  }, [isFlightsLoaded, flightsForInterval, flights, statisticType, id]);
 
   useEffect(() => {
     if (!!Object.keys(flightsForInterval).length) {
@@ -98,13 +98,13 @@ const DetailsPage = ({statsByInterval, flights, updateStatsInterval, match: {par
   return (
     <>
       <PageHeader>{`Статистика за ${interval}`}</PageHeader>
-      <Box my={10} px={10}>
-        <BtnBack />
-      </Box>
       <Box
         className={classes.main}
         style={matches ? {padding: "0 17%"} : null}
       >
+        <Container maxWidth={matches ? "xl" : "xs"} style={{padding: "15px 0", width: "100%"}}>
+          <BtnBack />
+        </Container>
         <Grid container justify="center" style={{width: "100%"}}>
           <Grid item style={{marginBottom: "15px", width: "inherit"}}>
             <Container maxWidth={matches ? "xl" : "xs"} style={{padding: "0", width: "100%"}}>
@@ -123,7 +123,7 @@ const DetailsPage = ({statsByInterval, flights, updateStatsInterval, match: {par
               !!Object.keys(flightsForInterval).length && statsByInterval.name && <CollapsibleTable flights={flightsForInterval[statsByInterval.name]} />
             }
 
-            </Container>
+          </Container>
         </Grid>
 
       </Box>
@@ -134,17 +134,19 @@ const DetailsPage = ({statsByInterval, flights, updateStatsInterval, match: {par
 DetailsPage.propTypes = {
   statsByInterval: PropTypes.object.isRequired,
   flights: PropTypes.array.isRequired,
-  updateStatsInterval: PropTypes.func.isRequired
+  updateStatsInterval: PropTypes.func.isRequired,
+  isFlightsLoaded: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = (state) => ({
   statsByInterval: state[NameSpace.STATISTIC].statsByInterval,
-  flights: state[NameSpace.FLIGHTS].flights
+  flights: state[NameSpace.FLIGHTS].flights,
+  isFlightsLoaded: state[NameSpace.FLIGHTS].isFlightsLoaded,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   updateStatsInterval(stats) {
-    dispatch(ActionCreator.setDetailsInterval(stats));
+    dispatch(ActionCreator.setStatsInterval(stats));
   },
 });
 export default connect(mapStateToProps, mapDispatchToProps)(DetailsPage);

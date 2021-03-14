@@ -23,14 +23,6 @@ import {useHistory} from "react-router";
 
 const times = ["Время работы", "Время налёта"];
 const intervals = ["Годы", "Месяцы"];
-const initialBarStyle = {
-  barActual: {
-    fill: "rgba(78, 133, 245, 1)"
-  } ,
-  barPlanned: {
-    fill: "rgba(78, 133, 245, 0.6)"
-  }
-};
 
 const Chart = ({ chartData, toggleStatisticType }) => {
   let history = useHistory();

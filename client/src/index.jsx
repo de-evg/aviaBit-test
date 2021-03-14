@@ -8,8 +8,9 @@ import App from "./components/app/app";
 import root from "./store/reducers/root";
 import Api from "./api/api";
 import { fetchFlights } from "./store/api-actions";
+import {ActionCreator} from "./store/action";
 
-const BACKEND_URL = `http://192.168.1.68:8080`;
+const BACKEND_URL = `http://localhost:8080`;
 
 const api = new Api(BACKEND_URL);
 const store = createStore(
@@ -26,6 +27,12 @@ Promise.all([store.dispatch(fetchFlights())])
       document.getElementById("root")
     );
   })
-  .catch((err) => {
-    console.log(err);
+  .catch(() => {
+    store.dispatch(ActionCreator.loadError());
+    render(
+      <Provider store={store}>
+        <App />
+      </Provider>,
+      document.getElementById("root")
+    );
   });

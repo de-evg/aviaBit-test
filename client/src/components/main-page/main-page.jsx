@@ -1,4 +1,5 @@
 import React, {useCallback, useState} from "react";
+import PropTypes from 'prop-types';
 import {
   Box,
   useMediaQuery,
@@ -15,6 +16,7 @@ import {connect} from "react-redux";
 import {NameSpace} from "../../store/reducers/root";
 import NoPlannedFlights from "../no-planned-flights/no-planned-flights";
 import PageHeader from "../page-header/page-header";
+import {fetchFlights} from "../../store/api-actions";
 
 const useStyles = makeStyles({
   main: {
@@ -33,7 +35,7 @@ const useStyles = makeStyles({
   },
 });
 
-const MainPage = ({noNextFlight}) => {
+const MainPage = ({noNextFlight, isLoadError, loadFlights}) => {
   const classes = useStyles();
   const matches = useMediaQuery(`(min-width: 600px)`);
   const [isChartShowed, setChartShowStatus] = useState(false);
@@ -41,6 +43,10 @@ const MainPage = ({noNextFlight}) => {
   const handleShowChartBtnClick = useCallback(() => {
     setChartShowStatus(!isChartShowed);
   }, [isChartShowed]);
+
+  const handleLoadFlightBtnClick = useCallback(() => {
+    loadFlights();
+  }, [loadFlights]);
 
   return (
     <>
@@ -78,7 +84,7 @@ const MainPage = ({noNextFlight}) => {
               justify="center"
               style={{width: "50%"}}
             >
-              {matches && <Btn clickHandler={handleShowChartBtnClick}>Статистика налёта</Btn>}
+              {matches && !isLoadError && <Btn clickHandler={handleShowChartBtnClick}>Статистика налёта</Btn>}
             </Grid>
           </Grid>
           <Grid container justify="space-between" style={{paddingTop: "20px"}}>
@@ -91,7 +97,7 @@ const MainPage = ({noNextFlight}) => {
             >
               {noNextFlight ? <NoPlannedFlights /> : <NextFlight />}
             </Grid>
-            {matches ? null : (
+            {!matches && !isLoadError && (
               <AccordionContainer
                 style={{width: "350px"}}
                 renderDetails={() => <FlightStatistic />}
@@ -114,14 +120,28 @@ const MainPage = ({noNextFlight}) => {
               </Grid>
             ) : null}
           </Grid>
+          {isLoadError && <Grid item> <Btn clickHandler={handleLoadFlightBtnClick}>Поробовать ещё раз</Btn></Grid>}
         </Grid>
       </Box>
     </>
   );
 };
 
+MainPage.propTypes = {
+  noNextFlight: PropTypes.bool.isRequired,
+  isLoadError: PropTypes.bool.isRequired,
+  loadFlights: PropTypes.func.isRequired
+};
+
 const mapStateToProps = (state) => ({
   noNextFlight: state[NameSpace.FLIGHTS].noNextFlight,
+  isLoadError: state[NameSpace.FLIGHTS].isLoadError,
 });
 
-export default connect(mapStateToProps)(MainPage);
+const mapDispatchToProps = (dispatch) => ({
+  loadFlights() {
+    dispatch(fetchFlights())
+  }
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(MainPage);

@@ -20,6 +20,7 @@ const useStyles = makeStyles({
 const User = () => {
   const classes = useStyles();
   const matches = useMediaQuery(`(min-width: 600px)`);
+  const retina = useMediaQuery(`(min-resolution: 192dpi)`);
 
   return (
     <Grid
@@ -35,7 +36,7 @@ const User = () => {
         <Avatar
           alt="Sheldon Cooper"
           style={{ width: "60px", height: "60px" }}
-          src="./img/avatar.jpg"
+          src={retina ? "/img/avatar@2x.jpg" : "/img/avatar.jpg"}
         />
       </Grid>
       <Grid container alignItems="center" item>

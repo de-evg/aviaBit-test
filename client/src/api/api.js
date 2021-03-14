@@ -35,7 +35,7 @@ class Api {
     })
       .then(Api.checkStatus)
       .catch((err) => {
-        throw console.log(err);
+        throw new Error();
       });
   }
 

@@ -4,7 +4,8 @@ export const ActionType = {
   CHANGE_FILTER: "CHANGE_FILTER",
   SEARCH_NEXT_FLIGHT: "SEARCH_NEXT_FLIGHT",
   CHANGE_STATS: "CHANGE_STATS",
-  RESET_STATS: "RESET_STATS"
+  RESET_STATS: "RESET_STATS",
+  LOAD_ERROR: "LOAD_ERROR"
 };
 
 export const ActionCreator = {
@@ -27,7 +28,10 @@ export const ActionCreator = {
     type: "CHANGE_STATS",
     payload: stats
   }),
-  resetStatsInterval: ()=> ({
+  resetStatsInterval: () => ({
     type: "RESET_STATS"
+  }),
+  loadError: () => ({
+    type: "LOAD_ERROR"
   })
 };

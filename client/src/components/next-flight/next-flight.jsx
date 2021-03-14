@@ -68,7 +68,7 @@ const NextFlight = ({
 }) => {
   const classes = useStyles();
   const matches = useMediaQuery(`(min-width: 600px)`);
-  const retina = useMediaQuery(`(min-resolution: 192dpi)`);
+  const retina = useMediaQuery(`(min-resolution: 144dpi)`);
 
   const [flightData, setFlightData] = useState({
     date: "",

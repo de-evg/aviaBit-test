@@ -20,7 +20,7 @@ const useStyles = makeStyles({
 const User = () => {
   const classes = useStyles();
   const matches = useMediaQuery(`(min-width: 600px)`);
-  const retina = useMediaQuery(`(min-resolution: 192dpi)`);
+  const retina = useMediaQuery(`(min-resolution: 144dpi)`);
 
   return (
     <Grid

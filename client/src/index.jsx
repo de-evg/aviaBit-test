@@ -10,7 +10,7 @@ import Api from "./api/api";
 import { fetchFlights } from "./store/api-actions";
 import {ActionCreator} from "./store/action";
 
-const BACKEND_URL = `http://192.168.1.68:8080`;
+const BACKEND_URL = `http://localhost:8080`;
 
 const api = new Api(BACKEND_URL);
 const store = createStore(

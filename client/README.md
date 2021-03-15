@@ -11,7 +11,7 @@
   npm start из папки client.
 
 Запуск клиента в локальной сети:
-  В client/src/index.js изменить BACKEND_URL на URL хоста.
+  В client/src/index.jsx изменить BACKEND_URL на URL хоста.
   npm run buid из папки client.
   serve -s build.
 
